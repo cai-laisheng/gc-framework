@@ -20,13 +20,15 @@ import java.util.concurrent.CountDownLatch;
 public class CountDownlatchTest {
 
     public static void main(String[] args) throws InterruptedException {
-        CountDownLatch countDownLatch =new CountDownLatch(10); //需要10个线程完成任务
-        for (int i=0;i<100;i++){
+        //需要10个线程完成任务
+        CountDownLatch countDownLatch =new CountDownLatch(10);
+        for (int i=0;i<20;i++){
             // 生成线程
             new Thread(new ReadNum(i,countDownLatch)).start();
         }
         countDownLatch.await(); //要求主线程等待所有10个检查任务全部完成
-        System.out.println("args = [ 线程结束]");
+        // 执行完 CountDownLatch(10) 10个任务后，主线程开始执行，不再等待
+        System.out.println(" 线程名称为:"+Thread.currentThread().getName()+" main args = [ 线程结束]");
     }
 
     static class ReadNum implements Runnable{
@@ -42,7 +44,7 @@ public class CountDownlatchTest {
             synchronized (this){
                 System.out.println("打印ID:"+id+" 线程名称为:"+Thread.currentThread().getName());
                 latch.countDown(); //通知CountDownLatch一个线程已经完成了任务
-                System.out.println("latch的数值:"+latch.getCount()+"  线程组任务:"+id+"  结束，其他任务继续");
+                System.out.println(" 线程名称为:"+Thread.currentThread().getName()+" ,latch的数值:"+latch.getCount()+"  线程组任务:"+id+"  结束，其他任务继续");
             }
         }
     }

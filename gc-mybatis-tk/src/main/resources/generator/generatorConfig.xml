@@ -36,16 +36,11 @@
 <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
 <!--        </table>-->
 
-        <table tableName="qy_chat_detail_user">
+        <table tableName="external_user_log">
             <!--mysql 配置-->
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
-
-        <table tableName="qy_chat_detail">
-            <!--mysql 配置-->
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
-        </table>
 
 <!--        <table tableName="sys_menu">-->
 <!--            &lt;!&ndash;mysql 配置&ndash;&gt;-->
