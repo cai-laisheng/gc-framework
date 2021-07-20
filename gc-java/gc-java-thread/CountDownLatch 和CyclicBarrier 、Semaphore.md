@@ -25,8 +25,15 @@
     5、getCount() 获取当前 latch 的数量
    
 ## CyclicBarrier
+栅栏类似于闭锁，它能阻塞一组线程直到某个事件的发生。栅栏与闭锁的关键区别在于，所有的线程必须同时到达栅栏位置，才能继续执行。闭锁用于等待事件，而栅栏用于等待其他线程。
 
+CyclicBarrier可以使一定数量的线程反复地在栅栏位置处汇集。当线程到达栅栏位置时将调用await方法，这个方法将阻塞直到所有线程都到达栅栏位置。如果所有线程都到达栅栏位置，那么栅栏将打开，此时所有的线程都将被释放，而栅栏将被重置以便下次使用。
 
+![](https://img-blog.csdnimg.cn/20181218144511688)
+
+![](https://img-blog.csdnimg.cn/img_convert/fa4d24955103ee1c8c0564ab45eebe26.png)
+
+示例：CyclicBarrierExample3
 
 ## cyclicbarrier和countdownlatch的区别
    
@@ -40,6 +47,8 @@
    * 而CyclicBarrier一般用于一组线程互相等待至某个状态，然后这一组线程再同时执行；
    * countdownlatch是计数器，线程完成一个就记一个，就像报数，只不过是递减的
    * 而CyclicBarrier更像一个水闸，线程执行就想水流动，但是会在水闸处停止，直至水满（线程都运行完毕）才开始泄流
+   * CyclicBarrier的计数器由自己控制，而CountDownLatch的计数器则由使用者来控制，在CyclicBarrier中线程调用await方法不仅会将自己阻塞还会将计数器减1，而在CountDownLatch中线程调用await方法只是将自己阻塞而不会减少计数器的值。
+   * CountDownLatch只能拦截一轮，而CyclicBarrier可以实现循环拦截
    
    
         https://blog.csdn.net/wangzibai/article/details/102669112

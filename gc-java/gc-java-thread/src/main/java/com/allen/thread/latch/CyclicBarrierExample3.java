@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
  */
 public class CyclicBarrierExample3 {
     // 请求的数量
-    private static final int threadCount = 550;
+    private static final int threadCount = 20;
     // 需要同步的线程数量 用于在线程到达屏障时，优先执行barrierAction，方便处理更复杂的业务场景。
     private static final CyclicBarrier cyclicBarrier = new CyclicBarrier(5, () -> {
         System.out.println("------当线程数达到之后，优先执行barrierAction------");
@@ -21,7 +21,7 @@ public class CyclicBarrierExample3 {
 
     public static void main(String[] args) throws InterruptedException {
         // 创建线程池
-        ExecutorService threadPool = Executors.newFixedThreadPool(10);
+        ExecutorService threadPool = Executors.newFixedThreadPool(5);
 
         for (int i = 0; i < threadCount; i++) {
             final int threadNum = i;

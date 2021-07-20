@@ -22,13 +22,13 @@ public class CyclicBarrierTest {
         // CyclicBarrier() 参数parties指让多少个线程或者任务等待至barrier状态；参数barrierAction为当这些线程都达到barrier状态时会执行的内容。
         CyclicBarrier cyclicBarrier =new CyclicBarrier(5, new Runnable() {
             public void run() {
-                System.out.println("线程组结束");
+                System.out.println("----- 优先 CyclicBarrier 的任务执行 -----------");
             }
         });
-        for (int i=0;i<150;i++){
+        for (int i=0;i<20;i++){
             new Thread(new ReadNum2(i,cyclicBarrier)).start();
         }
-        System.out.println("cyclicBarrier = [线程执行完]");
+        System.out.println("======================cyclicBarrier = [线程执行完]=====================");
     }
 
     //CyclicBarrier会在所有线程任务结束之后，才会进行后续任务
@@ -44,11 +44,10 @@ public class CyclicBarrierTest {
 
         public void run() {
             synchronized (this){
-                System.out.println("打印ID:"+id+" 线程名称为:"+Thread.currentThread().getName());
+                System.out.println("---- 打印ID:"+id+" 线程名称为:"+Thread.currentThread().getName()+" ，barrier的数值:"+barrier.getNumberWaiting());
                 try {
-                    System.out.println("barrier的数值:"+barrier.getNumberWaiting());
                     barrier.await();
-                    System.out.println("线程组任务"+id+" 结束，其他任务继续执行,此时barrier的数值:"+barrier.getNumberWaiting());
+                    System.out.println("****** 线程组任务"+id+" 结束，其他任务继续执行,此时barrier的数值:"+barrier.getNumberWaiting());
                 }catch (Exception e){
                     System.out.println("发生异常，异常信息为:"+e.getMessage());
                 }
