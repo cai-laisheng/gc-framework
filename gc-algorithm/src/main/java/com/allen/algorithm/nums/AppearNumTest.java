@@ -107,4 +107,18 @@ public class AppearNumTest {
         System.out.println(item);
     }
 
+    /**
+     * https://www.geekxh.com/1.8.%E4%BD%8D%E8%BF%90%E7%AE%97%E7%B3%BB%E5%88%97/805.html#_04%E3%80%81%E4%BD%8D%E8%BF%90%E7%AE%97
+     */
+    @Test
+    public void test4(){
+        int[] nums = {2,3,2,2,3,3,1};
+        int a = 0, b = 0;
+        for (int next : nums) {
+            b = (b ^ next) & ~a;
+            a = (a ^ next) & ~b;
+        }
+
+        System.out.println(b);
+    }
 }

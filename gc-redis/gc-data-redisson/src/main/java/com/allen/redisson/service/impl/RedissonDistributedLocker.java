@@ -1,6 +1,6 @@
 package com.allen.redisson.service.impl;
 
-import com.allen.redis.lock.redisson.service.DistributedLocker;
+import com.allen.redisson.service.DistributedLocker;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
