@@ -1,8 +1,10 @@
 package com.allen.redisson.example;
 
 import cn.hutool.core.util.StrUtil;
+import com.allen.redisson.config.RedissonLockHelper;
 import com.allen.redisson.mapper.SysUserMapper;
 import com.allen.redisson.repository.RedisRepository;
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -15,6 +17,8 @@ public class SnowsLide {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+    @Autowired
+    RedissonLockHelper redissonLockHelper;
 
     /**
      * 缓存雪崩  使用锁处理。加锁排队只是为了减轻数据库的压力，并没有提高系统吞吐量。
@@ -40,6 +44,43 @@ public class SnowsLide {
                     redisRepository.setExpire(cacheKey, cacheValue, cacheTime);
                 }
             }
+            return cacheValue;
+        }
+    }
+
+    /**
+     * 分布式锁
+     * @return
+     */
+    public String snowsLide2(){
+        int cacheTime = 30;
+        String cacheKey = "product_list";
+        String lockKey = cacheKey;
+
+        String cacheValue = redisRepository.get(cacheKey);
+        if (StrUtil.isNotBlank(cacheValue)) {
+            return cacheValue;
+        } else {
+            RLock lock = redissonLockHelper.lock(lockKey, 10);
+
+            try {
+                // 加锁
+                lock.lock();
+                cacheValue = redisRepository.get(cacheKey);
+                if (cacheValue != null) {
+                    return cacheValue;
+                } else {
+                    //这里一般是sql查询数据
+                    cacheValue = sysUserMapper.selectAll().toString();
+                    redisRepository.setExpire(cacheKey, cacheValue, cacheTime);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                // 释放锁
+                lock.unlock();
+            }
+
             return cacheValue;
         }
     }
