@@ -4,6 +4,8 @@ import com.allen.redisson.mapper.SysUserMapper;
 import com.allen.redisson.po.SysUser;
 import com.allen.redisson.repository.RedisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 
 /**
  * @Author Allen 2021/7/31 20:20  删除缓存重试机制
@@ -17,6 +19,8 @@ public class RetryStrategy {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+    @Autowired
+    private KafkaTemplate<String,String> kafkaTemplate;
 
     /**
      * 写请求更新数据库
@@ -33,6 +37,7 @@ public class RetryStrategy {
         if (del != 0){
             // 删除失败，丢到kafka队列
             // todo
+            kafkaTemplate.send("cache-key",value.getMobile());
         }
     }
 
@@ -43,14 +48,14 @@ public class RetryStrategy {
      * 重试删除缓存操作
      * @param str
      */
-    //@KafkaListener(topics = {"qywxopen-contactUserMsg"}, groupId = "wxGroup")
+    @KafkaListener(topics = {"cache-key"}, groupId = "allenGroup")
     public void listener(String str){
         String cacheKey = str;
         // 重试删除缓存操作
         long del = redisRepository.del(cacheKey);
         if (del != 0){
             // 删除失败，丢到队列
-
+            kafkaTemplate.send("cache-key",cacheKey);
         }
     }
 

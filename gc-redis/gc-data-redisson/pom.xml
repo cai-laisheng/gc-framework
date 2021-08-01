@@ -82,7 +82,11 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.76</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
