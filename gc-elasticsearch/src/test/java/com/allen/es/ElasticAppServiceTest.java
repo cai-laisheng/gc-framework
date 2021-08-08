@@ -30,7 +30,7 @@ class ElasticAppServiceTest {
 	 */
 	@Test
 	void save() {
-		DocBean docBean = new DocBean(19997L, "XX0193hhh", "XX8064hhh", "xxxxxxgghhhh", 1);
+		DocBean docBean = new DocBean(1L, "XX0193hhh", "XX8064hhh", "xxxxxxgghhhh", 1);
 		iElasticService.save(docBean);
 	}
 
@@ -39,6 +39,7 @@ class ElasticAppServiceTest {
 	 */
 	@Test
 	void saveAll() {
+
 		List<DocBean> list = new ArrayList<>();
 		list.add(new DocBean(19998L, "XX0193", "XX8064", "saveAll", 2));
 		list.add(new DocBean(19999L, "XX0193", "XX8064", "saveAll", 2));
@@ -47,6 +48,25 @@ class ElasticAppServiceTest {
 		list.add(new DocBean(20003L, "XX0193", "XX8064", "saveAll", 2));
 
 		iElasticService.saveAll(list);
+	}
+
+	@Test
+	void saveAll2() {
+		long startTime = System.currentTimeMillis();
+		List<DocBean> list = new ArrayList<>();
+		DocBean docBean = null;
+		for (int i =2;i<10000001;i++){
+			docBean = new DocBean(Long.valueOf(i), "XX0193", "XX8064", "saveAll", 2);
+
+			list.add(docBean);
+			if (list.size() == 500){
+				iElasticService.saveAll(list);
+				list.clear();
+			}
+		}
+		long endTime = System.currentTimeMillis();
+		System.out.println(endTime-startTime);
+
 	}
 
 	@Test
