@@ -140,3 +140,5 @@ Elasticsearch 提供的首个近似聚合是 cardinality 度量。它提供一�
 其特点是：可配置的精度，用来控制内存的使用（更精确 ＝ 更多内存）；小的数据集精度是非常高的；
 我们可以通过配置参数，来设置去重需要的固定内存使用量。无论数千还是数十亿的唯一值，内存使用量只与你配置的精确度相关。
 
+https://blog.csdn.net/inet_ygssoftware/article/details/117155195
+
