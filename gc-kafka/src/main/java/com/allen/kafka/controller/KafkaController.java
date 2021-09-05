@@ -19,7 +19,7 @@ public class KafkaController {
 
     @GetMapping("/send")
     public String send(){
-        for (int i = 0;i<1000;i++){
+        for (int i = 0;i<10000;i++){
             String msg = "发送信息，测试失败处理，次数为:"+i;
 
             allenKafkaProducer.send("allen-test-topic",msg);

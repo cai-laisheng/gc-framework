@@ -136,6 +136,10 @@ Cache-Aside缓存模式中，有些小伙伴还是有疑问，在写入请求的
 
 示例包：com.allen.redisson.write;
 
+主从DB问题：因为主从DB同步存在延时时间。如果删除缓存之后，数据同步到备库之前已经有请求过来时，「会从备库中读到脏数据」，如何解决呢？解决方案如下流程图：
+
+![](https://mmbiz.qpic.cn/mmbiz_png/sMmr4XOCBzEPicnI37qDPmDNWTuv1yDBKDRiaPhhg7TqJCaEfzJWew7c8jVuZJzJ5OzHRx4ko8EibbRqjGTlph5eg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+
 https://juejin.cn/post/6964531365643550751
 
 

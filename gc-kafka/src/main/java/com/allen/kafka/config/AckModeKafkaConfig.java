@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -18,36 +17,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author Allen 2021/5/22 19:32  消费者的一些配置，若是引用了 spring-kafka ，此处可以忽略不计。此处用于学习demo
+ * @Author Allen 2021/9/4 18:36   此处为手动提交配置
  **/
-//@Configuration
-//@EnableKafka
-public class KafkaConsumerConfig {
+@Configuration
+public class AckModeKafkaConfig {
 
-    private Logger log = LoggerFactory.getLogger(KafkaConsumerConfig.class);
+    private Logger log = LoggerFactory.getLogger(AckModeKafkaConfig.class);
 
-    @Value("${kafka.consumer.bootstrap.servers}")
+    @Value("${spring.kafka.bootstrap-servers}")
     private String servers;
 
-    @Value("${kafka.consumer.session.timout.ms}")
+    @Value("${spring.kafka.consumer.session.timout.ms}")
     private String sessionTimeout;
 
-    @Value("${kafka.consumer.max.poll.interval.ms}")
+    @Value("${spring.kafka.consumer.max.poll.interval.ms}")
     private String pollInterval;
 
-    @Value("${kafka.consumer.max.poll.records}")
+    @Value("${spring.kafka.consumer.max-poll-records}")
     private String pollRecords;
 
-    @Value("${kafka.consumer.heartbeat.interval.ms}")
+    @Value("${spring.kafka.consumer.heartbeat.interval.ms}")
     private String heartbeatInterval;
 
-    @Value("${kafka.consumer.group.id}")
+    @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
 
     /**
-     * 消费者基础配置
-     *
-     * @return Map
+     * kafka配置参数
+     * @return
      */
     private Map<String, Object> consumerProps() {
         Map<String, Object> props = new HashMap<>(9);
@@ -64,14 +61,16 @@ public class KafkaConsumerConfig {
     }
 
     /**
-     * 自定义 ConcurrentKafkaListenerContainerFactory 初始化消费者
-     *
-     * @return ConcurrentKafkaListenerContainerFactory
+     * 手动提交 单条操作
+     * @param consumerFactory
+     * @return
      */
-    @Bean("ackContainerFactory")
-    public ConcurrentKafkaListenerContainerFactory ackContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
-        factory.setConsumerFactory(new DefaultKafkaConsumerFactory(consumerProps()));
+    @Bean("ackSimpleFactory")
+    public ConcurrentKafkaListenerContainerFactory ackSimpleFactory(ConsumerFactory consumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<Integer,String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+
         // 回调函数经常用于记录提交错误
         factory.getContainerProperties().setCommitCallback((offsets, exception) -> {
             if (exception != null) {
@@ -94,7 +93,7 @@ public class KafkaConsumerConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setConcurrency(10);
-        factory.getContainerProperties().setPollTimeout(1500);
+        factory.getContainerProperties().setPollTimeout(3000);
         // 回调函数经常用于记录提交错误
         factory.getContainerProperties().setCommitCallback((offsets, exception) -> {
             if (exception != null) {
@@ -105,4 +104,5 @@ public class KafkaConsumerConfig {
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);//设置手动提交ackMod
         return factory;
     }
+
 }
