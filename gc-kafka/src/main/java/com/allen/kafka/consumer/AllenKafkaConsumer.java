@@ -46,7 +46,7 @@ public class AllenKafkaConsumer {
      * 方法参数：pullMessage(@Payload String record, Acknowledgment ack)
      *         pullMessage(ConsumerRecord<String,String> record, Acknowledgment ack)
      */
-    @KafkaListener(containerFactory = "ackSimpleFactory",groupId = "allenGroup1",topics = "allen-test-topic")
+//    @KafkaListener(containerFactory = "ackSimpleFactory",groupId = "allenGroup1",topics = "qywx-ucm-externalUserMsg")
     public void pullMessage(@Payload String record, Acknowledgment ack) {
         // 手动提交
         if (ack !=null){
@@ -60,7 +60,7 @@ public class AllenKafkaConsumer {
      * @param records
      * @param ack
      */
-//    @KafkaListener(containerFactory = "batchFactory",groupId = "allenGroup2",topics = "allen-test-topic")
+    @KafkaListener(containerFactory = "batchFactory",groupId = "allenGroup2",topics = "qywx-ucm-externalUserMsg")
     public void pullMoreMessage(List<ConsumerRecord<String,String>> records, Acknowledgment ack) {
         log.info("批量消息大小:{}",records.size());
         for (ConsumerRecord  item: records){
@@ -89,7 +89,7 @@ public class AllenKafkaConsumer {
      * @param offset
      * @param consumer
      */
-//    @KafkaListener(topics = "allen-test-topic",groupId = "allenGroup3")
+//    @KafkaListener(topics = "qywx-ucm-externalUserMsg",groupId = "allenGroup3")
     public void onMessage(@Payload String message,
                           @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
                           @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,

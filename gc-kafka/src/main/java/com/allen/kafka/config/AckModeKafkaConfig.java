@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class AckModeKafkaConfig {
     @Value("${spring.kafka.consumer.max-poll-records}")
     private String pollRecords;
 
-    @Value("${spring.kafka.consumer.heartbeat.interval.ms}")
+    @Value("${heartbeat.interval.ms}")
     private String heartbeatInterval;
 
     @Value("${spring.kafka.consumer.group-id}")
