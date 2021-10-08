@@ -7,9 +7,8 @@
 		<groupId>com.allen</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<groupId>com.allen.boot</groupId>
 	<artifactId>gc-springboot</artifactId>
-	<name>demo</name>
+	<name>gc-springboot</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -44,6 +43,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

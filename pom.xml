@@ -40,7 +40,6 @@
         <module>gc-apollo</module>
         <module>gc-netty</module>
         <module>gc-internet</module>
-        <module>gc-document</module>
         <module>gc-wx</module>
     </modules>
 
