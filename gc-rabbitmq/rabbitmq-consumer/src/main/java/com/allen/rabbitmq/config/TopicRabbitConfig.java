@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author xuguocai  @date 2021/10/29 23:24  Topic Exchange 主题交换机
- */
+ * @Author Allen 2021/10/30 19:45  Topic Exchange 主题交换机
+ **/
+
 @Configuration
 public class TopicRabbitConfig {
-
     //绑定键
     public final static String man = "topic.man";
     public final static String woman = "topic.woman";

@@ -10,7 +10,7 @@ import java.util.Map;
  * @author xuguocai  @date 2021/10/29 23:28
  */
 @Component
-@RabbitListener(queues = "topic.woman")
+//@RabbitListener(queues = "topic.woman")
 public class TopicTotalReceiver {
 
     @RabbitHandler

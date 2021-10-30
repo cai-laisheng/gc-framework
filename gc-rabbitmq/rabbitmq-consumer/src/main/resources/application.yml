@@ -12,3 +12,8 @@ spring:
     password: root
     #虚拟host 可以不设置,使用server默认host
     virtual-host: JCcccHost
+
+    #确认消息已发送到交换机(Exchange)
+    publisher-confirms: true
+    #确认消息已发送到队列(Queue)
+    publisher-returns: true

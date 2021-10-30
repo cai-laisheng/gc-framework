@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author xuguocai  @date 2021/10/29 21:02
+ * @author xuguocai  @date 2021/10/29 21:02  直连型交换机
  */
 
 @Configuration

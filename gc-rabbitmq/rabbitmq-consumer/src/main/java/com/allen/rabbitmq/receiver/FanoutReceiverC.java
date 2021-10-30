@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * @author xuguocai  @date 2021/10/29 23:27
- */
+ * @Author Allen 2021/10/30 19:50
+ **/
 @Component
-//@RabbitListener(queues = "topic.man")
-public class TopicManReceiver {
+@RabbitListener(queues = "fanout.C")
+public class FanoutReceiverC {
 
     @RabbitHandler
     public void process(Map testMessage) {
-        System.out.println("TopicManReceiver消费者收到消息  : " + testMessage.toString());
-    }
+        System.out.println("FanoutReceiverC消费者收到消息  : " + testMessage.toString());
 
+    }
 }
