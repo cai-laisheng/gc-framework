@@ -6,14 +6,16 @@
         <artifactId>gc-framework</artifactId>
         <groupId>com.allen</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gc-kafka</artifactId>
+    <artifactId>gc-rabbitmq</artifactId>
+
     <modules>
-        <module>kafka-producer</module>
-        <module>kafka-consumer</module>
+        <module>rabbitmq-consumer</module>
+        <module>rabbitmq-provider</module>
     </modules>
 
 </project>
