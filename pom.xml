@@ -35,7 +35,7 @@
         <module>gc-kafka</module>
         <module>gc-dubbo</module>
         <module>gc-elasticsearch</module>
-        <module>gc-docker</module>
+        <module>gc-docker-k8s</module>
         <module>gc-springcloud</module>
         <module>gc-apollo</module>
         <module>gc-netty</module>
