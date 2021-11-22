@@ -1,5 +1,6 @@
 package com.allen.rabbitmq.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import java.util.UUID;
 /**
  * @author xuguocai  @date 2021/10/29 21:09
  */
+@Slf4j
 @RestController
 public class SendMessageController {
 
@@ -29,6 +31,7 @@ public class SendMessageController {
         map.put("messageId",messageId);
         map.put("messageData",messageData);
         map.put("createTime",createTime);
+        log.info("直连机消息体：{}",map);
         //将消息携带绑定键值：TestDirectRouting 发送到交换机TestDirectExchange
         rabbitTemplate.convertAndSend("TestDirectExchange", "TestDirectRouting", map);
         return "ok";

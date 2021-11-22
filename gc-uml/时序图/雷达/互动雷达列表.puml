@@ -1,0 +1,23 @@
+@startuml
+actor people as people
+boundary 前端界面 as web
+control interact_radar_handlers.py as handler
+database mysql as mysql
+
+people -> web:1、触发互动雷达
+web ->handler:2、前端带参数请求后端接口
+handler -->handler:2.1 若是侧边栏请求，校验侧边栏权限
+handler -->web:2.2 没有侧边栏权限，则返回
+handler --> handler:3.1 若是后台列表请求，校验请求身份
+handler -->web:3.2 根据校验结果：\n没有分配企业雷达权限，则返回；\n没有个人雷达权限，则返回；\n没有该员工雷达权限，则返回
+handler ->mysql:4 根据查询条件（雷达类型、关键字等）查询数据库表
+mysql -->handler:4.1 返回雷达信息查询结果
+handler ->mysql:5 根据员工ID列表查询员工信息
+mysql -->handler:5.1 返回员工信息查询结果
+handler ->mysql:6 根据标签ID列表查询客户标签关系信息
+mysql -->handler:6.1 返回客户标签关系信息查询结果
+handler ->mysql:7 若是文章，则查询雷达文章
+mysql -->handler:7.1 返回雷达文章查询结果
+handler -->web:8、根据前端的请求参数及数据库查询结果组装数据并返回前端
+
+@enduml

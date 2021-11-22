@@ -1,0 +1,21 @@
+@startuml
+actor people as people
+boundary 前端界面 as web
+control living_handlers.py as handler
+database mysql as mysql
+database redis as redis
+queue task as livingTask
+
+people -> web:1 点击同步按钮
+web ->handler:2 前端带参数请求后端接口
+handler -> redis:3 根据hash_key查询同步情况
+redis -->handler:3.1 返回直播同步情况
+handler -->web:3.2 若正在同步，则结束此次请求。\n 若同步成功，则返回「当前同步操作太频繁，请稍后再试」
+handler ->mysql:4 根据corpid查询直播配置信息
+mysql -->handler:5 返回直播配置信息
+handler --> web:6 若直播配置不正确，则结束当前同步处理
+handler ->livingTask:7 若是存在员工列表，则执行同步员工操作
+handler ->livingTask:8 若是不存在员工列表，则执行同步企业所有员工操作
+handler -->web:9 同步结束，返回到前端
+
+@enduml

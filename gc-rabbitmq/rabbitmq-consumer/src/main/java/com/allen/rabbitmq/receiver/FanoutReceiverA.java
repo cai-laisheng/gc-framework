@@ -11,7 +11,7 @@ import java.util.Map;
  **/
 
 @Component
-@RabbitListener(queues = "fanout.A")
+//@RabbitListener(queues = "fanout.A")
 public class FanoutReceiverA {
 
     @RabbitHandler

@@ -42,6 +42,7 @@
         <module>gc-internet</module>
         <module>gc-wx</module>
         <module>gc-rabbitmq</module>
+        <module>gc-uml</module>
     </modules>
 
     <properties>

@@ -1,0 +1,35 @@
+@startuml
+actor people as people
+boundary 前端界面 as web
+control interact_radar_handlers.py as handler
+database mysql as mysql
+queue task as task
+
+people -> web:1、点击新增雷达（链接、文章、PDF）
+web ->handler:2、前端带参数请求后端接口
+handler -->handler:3、若是后台新增，判断雷达ID是否存在
+handler --> web:3.1、雷达ID不存在，则返回前端界面
+handler ->mysql:3.2、根据雷达ID及员工ID、CorpID查询雷达修改记录
+mysql -->handler:3.3、返回雷达修改记录
+handler ->mysql:3.4、若雷达修改记录存在，根据雷达ID查询雷达信息
+mysql -->handler:3.5、返回是否存在雷达
+handler --> web:3.6、若已经存在，则返回【已保存过为我的雷达，请在我的雷达查看】
+handler ->mysql:3.7、根据雷达ID查询雷达信息
+mysql -->handler:3.8、返回雷达信息
+handler --> web:3.9 根据雷达与企业信息判断，若是企业雷达则不能保存为我的雷达
+handler ->mysql:3.10、保存雷达文章
+handler -->handler:4、若是侧边栏，判断侧边栏权限
+handler --> web:4.1 若是没有创建侧边栏企业雷达权限，则返回；\n若是无创建企业雷达权限，则返回；
+handler -> mysql:5、更新雷达信息
+handler -->handler:6、若是雷达文章
+handler -> mysql:6.1、查询雷达文章是否存在
+mysql -->handler:6.2、返回雷达文章信息
+handler --> web:6.3、雷达文章不存在，则返回前端界面
+handler -> mysql:6.4、查询雷达文章是否有修改记录
+mysql -->handler:6.5、返回雷达文章修改记录信息
+handler -> mysql:6.6、没有修改记录，则保存雷达文章修改记录
+handler -> mysql:7、若存在评分规则，更新评分规则
+handler ->task :8 将修改过的文章放进消息队列进行审核
+handler -->web:9、返回雷达保存结果到前端
+
+@enduml

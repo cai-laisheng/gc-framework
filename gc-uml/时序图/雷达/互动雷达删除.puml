@@ -1,0 +1,16 @@
+@startuml
+actor people as people
+boundary 前端界面 as web
+control interact_radar_handlers.py as handler
+database mysql as mysql
+
+people --> web:1、点击删除按钮
+web ->handler:2、前端带参数请求后端接口
+handler -> mysql:3、根据雷达ID查看雷达是否存在
+mysql -->handler:4、返回查询结果
+handler -->web:5、若不存在雷达，则返回前端
+handler -> mysql:6、若是存在雷达，则删除数据库雷达信息
+mysql -->handler:7、返回删除情况
+handler -->web:8、后端返回删除情况到前端
+
+@enduml

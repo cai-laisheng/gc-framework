@@ -10,7 +10,7 @@ import java.util.Map;
  * @Author Allen 2021/10/30 19:50
  **/
 @Component
-@RabbitListener(queues = "fanout.C")
+//@RabbitListener(queues = "fanout.C")
 public class FanoutReceiverC {
 
     @RabbitHandler

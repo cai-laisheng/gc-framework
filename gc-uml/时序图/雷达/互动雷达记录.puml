@@ -1,0 +1,15 @@
+@startuml
+actor people as people
+boundary 前端界面 as web
+control interact_radar_handlers.py as handler
+database mysql as mysql
+
+people --> web:1、点击记录按钮
+web ->handler:2、前端带参数请求后端接口
+handler -> mysql:3、根据雷达ID、雷达名称、分页查看雷达修改记录是否存在
+mysql -->handler:4、返回查询结果
+handler -> mysql:5、根据雷达ID列表查询雷达文章
+mysql -->handler:6、返回雷达文章结果
+handler -->web:7、后端组装数据返回到前端
+
+@enduml
