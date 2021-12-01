@@ -1,7 +1,8 @@
 package com.allen.jdbc;
 
 import com.mongodb.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class MongoDBDemo {
 	
-	 private final static Logger logger = Logger.getLogger(MongoDBDemo.class);
+	 private final static Logger logger = LogManager.getLogger(MongoDBDemo.class);
 	 
 	 private static final String HOST="192.168.163.130";
 	 private static final int PORT=27017;

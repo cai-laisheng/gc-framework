@@ -1,11 +1,12 @@
 package com.allen.jdbc;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 
 public class MysqlDemo {
-	private final static Logger logger = Logger.getLogger(MysqlDemo.class);
+	private final static Logger logger = LogManager.getLogger(MysqlDemo.class);
 	
 	public static final String url = "jdbc:mysql://127.0.0.1:3306/blogDemo?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 //    public static final String className = "com.mysql.jdbc.Driver";  
