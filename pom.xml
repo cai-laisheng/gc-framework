@@ -43,6 +43,9 @@
         <module>gc-wx</module>
         <module>gc-rabbitmq</module>
         <module>gc-uml</module>
+        <module>gc-keepalived</module>
+        <module>gc-bigdata</module>
+        <module>gc-bigdata/gc-hdfs</module>
     </modules>
 
     <properties>
