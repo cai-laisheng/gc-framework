@@ -201,3 +201,80 @@ java.io 包的好处是代码比较简单、直观，缺点则是 IO 效率和�
 * Charset，提供 Unicode 字符串定义，NIO 也提供了相应的编解码器等，例如，通过下面的方式进行字符串到 ByteBuffer 的转换： Charset.defaultCharset().encode("Hello world!"));
 
 ## 12 Java有几种文件拷贝方式？哪一种最高效？
+利用 java.io 类库，直接为源文件构建一个 FileInputStream 读取，然后再为目标文件构建一个 FileOutputStream，完成写入工作
+
+    public static void copyFileByStream(File source, File dest) throws
+    IOException {
+        try (InputStream is = new FileInputStream(source);
+        OutputStream os = new FileOutputStream(dest);){
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = is.read(buffer)) > 0) {
+        os.write(buffer, 0, length);
+        }
+        }
+    }
+
+利用 java.nio 类库提供的 transferTo 或 transferFrom 方法实现
+
+    public static void copyFileByChannel(File source, File dest) throws
+    IOException {
+    try (FileChannel sourceChannel = new FileInputStream(source)
+    .getChannel();
+    FileChannel targetChannel = new FileOutputStream(dest).getChannel
+    ();){
+    for (long count = sourceChannel.size() ;count>0 ;) {
+    long transferred = sourceChannel.transferTo(
+    sourceChannel.position(), count, targetChannel);            
+    sourceChannel.position(sourceChannel.position() + transferred);
+    count -= transferred;
+    }
+    }
+    }
+
+Java 标准类库本身已经提供了几种 Files.copy 的实现。
+
+对于 Copy 的效率，这个其实与操作系统和配置等情况相关，总体上来说，**NIO transferTo/From 的方式可能更快**，因为它更能利用现代操作系统底层机制，避免不必要拷贝和上下文切换
+## 13 谈谈接口和抽象类有什么区别？
+接口和抽象类是 Java 面向对象设计的两个基础机制。
+
+接口是对行为的抽象，它是抽象方法的集合，利用接口可以达到 API 定义和实现分离的目的。
+接口，不能实例化；不能包含任何非常量成员，任何 field 都是隐含着 public static final 的意义；
+同时，没有非静态方法实现，也就是说要么是抽象方法，要么是静态方法。Java 标准类库中，定义了非常多的接口，比如 java.util.List。
+
+抽象类是不能实例化的类，用 abstract 关键字修饰 class，其目的主要是**代码重用**。除了不能实例化，形式上和一般的 Java 类并没有太大区别，
+可以有一个或者多个抽象方法，也可以没有抽象方法。抽象类大多用于抽取相关 Java 类的共用方法实现或者是共同成员变量，
+然后通过继承的方式达到代码复用的目的。Java 标准库中，比如 collection 框架，很多通用部分就被抽取成为抽象类， 例如 java.util.AbstractList。
+
+Java 类实现 interface 使用 implements 关键词，继承 abstract class 则是使用 extends 关键词，
+我们可以参考 Java 标准库中的 ArrayList。
+
+    public class ArrayList<E> extends AbstractList<E>
+    implements List<E>, RandomAccess, Cloneable, java.io.Serializable
+    {
+    //...
+    }
+
+**封装**的目的是隐藏事务内部的实现细节，以便提高安全性和简化编程。封装提供了合理的边界，避免外部调用者接触到内部的细节。
+我们在日常开发中，因为无意间暴露了细节导致的难缠 bug 太多了，比如在多线程环境暴露内部状态，导致的并发修改问题。
+从另外一个角度看，封装这种隐藏，也提供了简化的界面，避免太多无意义的细节浪费调用者的精力。
+
+**继承**是代码复用的基础机制，类似于我们对于马、白马、黑马的归纳总结。但要注意，继承可以看作是非常紧耦合的一种关系，父类代码修改，
+子类行为也会变动。在实践中，过度滥用继承，可能会起到反效果。
+
+**多态**，你可能立即会想到**重写（override）和重载（overload）、向上转型**。简单说，重写是父子类中相同名字和参数的方法，不同的实现；
+重载则是相同名字的方法，但是不同的参数，本质上这些方法签名是不一样的。
+
+## 14 谈谈你知道的设计模式？
+大致按照模式的应用目标分类，设计模式可以分为创建型模式、结构型模式和行为型模式。
+
+创建型模式，是对对象创建过程的各种问题和解决方案的总结，包括各种工厂模式（Factory、Abstract Factory）、单例模式（Singleton）、构建器模式（Builder）、原型模式（ProtoType）。
+
+结构型模式，是针对软件设计结构的总结，关注于类、对象继承、组合方式的实践经验。常见的结构型模式，包括桥接模式（Bridge）、适配器模式（Adapter）、装饰者模式（Decorator）、代理模式（Proxy）、组合模式（Composite）、外观模式（Facade）、享元模式（Flyweight）等。
+
+行为型模式，是从类或对象之间交互、职责划分等角度总结的模式。比较常见的行为型模式有策略模式（Strategy）、解释器模式（Interpreter）、命令模式（Command）、观察者模式（Observer）、迭代器模式（Iterator）、模板方法模式（Template Method）、访问者模式（Visitor）。
+
+模式示例【gc-design-pattern】
+
+学习资料来源于极客【Java 核心技术面试精讲】的Java基础
+
