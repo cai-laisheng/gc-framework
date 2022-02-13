@@ -1,5 +1,12 @@
 package com.allen.thread.dead;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @program: MultiThread
  * @description: DeadLockDemo
@@ -49,7 +56,33 @@ public class DeadLockDemo {
     }
 
     public static void main(String[] args) {
+        findDeadlockedThreads();
         deadLock();
     }
 
+    /**
+     * 如果我们是开发自己的管理工具，需要用更加程序化的方式扫描服务进程、定位死锁，
+     * 可以考虑使用 Java 提供的标准管理 API，ThreadMXBean，其直接就提供了 findDeadlockedThreads() 方法用于定位
+     */
+    public static void findDeadlockedThreads(){
+        ThreadMXBean mbean = ManagementFactory.getThreadMXBean();
+        Runnable dlCheck = new Runnable() {
+
+            @Override
+            public void run() {
+                long[] threadIds = mbean.findDeadlockedThreads();
+                if (threadIds != null) {
+                    ThreadInfo[] threadInfos = mbean.getThreadInfo(threadIds);
+                    System.out.println("Detected deadlock threads:");
+                    for (ThreadInfo threadInfo : threadInfos) {
+                        System.out.println(threadInfo.getThreadName());
+                    }
+                }
+            }
+        };
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        // 稍等5秒，然后每10秒进行一次死锁扫描
+        scheduler.scheduleAtFixedRate(dlCheck, 5L, 10L, TimeUnit.SECONDS);
+    }
 }
