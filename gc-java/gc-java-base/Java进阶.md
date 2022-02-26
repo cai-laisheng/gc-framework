@@ -319,6 +319,76 @@ VM提供的收集器较多，特征不一，适用于不同的业务场景：
 ## 28 谈谈你的 GC 调优思路？
 ![](./images/调优思路.png)
 
+## 29 Java内存模型中的happen-before是什么？
+Happen-before 关系，是 Java 内存模型中保证多线程操作可见性的机制，也是对早期语言规范中含糊的可见性概念的一个精确定义。
+
+它的具体表现形式，包括但远不止是我们直觉中的 synchronized、volatile、lock 操作顺序等方面，例如：
+* 线程内执行的每个操作，都保证 happen-before 后面的操作，这就保证了基本的程序顺序规则，这是开发者在书写程序时的基本约定。
+* 对于 volatile 变量，对它的写操作，保证 happen-before 在随后对该变量的读取操作。对该变量的写操作之后，编译器会插入一个写屏障。对该变量的读操作之前，编译器会插入一个读屏障。
+* 对于一个锁的解锁操作，保证 happen-before 加锁操作。
+* 对象构建完成，保证 happen-before 于 finalizer 的开始动作。
+* 甚至是类似线程内部操作的完成，保证 happen-before 其他 Thread.join() 的线程等。
+
+这些 happen-before 关系是存在着传递性的，如果满足 a happen-before b 和 b happen-before c，那么 a happen-before c 也成立。
+
+前面我一直用 happen-before，而不是简单说前后，是因为它不仅仅是对执行时间的保证，也包括对内存读、写操作顺序的保证。仅仅是时钟顺序上的先后，并不能保证线程交互的可见性。
+
+## 30 Java 程序运行在 Docker 等容器环境有哪些新问题？
+对于 Java 来说，Docker 毕竟是一个较新的环境，例如，其内存、CPU 等资源限制是通过 CGroup（Control Group）实现的，早期的 JDK 版本（8u131 之前）并不能识别这些限制，进而会导致一些基础问题：
+* 如果未配置合适的 JVM 堆和元数据区、直接内存等参数，Java 就有可能试图使用超过容器限制的内存，最终被容器 OOM kill，或者自身发生 OOM。
+* 错误判断了可获取的 CPU 资源，例如，Docker 限制了 CPU 的核数，JVM 就可能设置不合适的 GC 并行线程数等。
+
+从应用打包、发布等角度出发，JDK 自身就比较大，生成的镜像就更为臃肿，当我们的镜像非常多的时候，镜像的存储等开销就比较明显了。
+
+如果考虑到微服务、Serverless 等新的架构和场景，Java 自身的大小、内存占用、启动速度，都存在一定局限性，因为 Java 早期的优化大多是针对长时间运行的大型服务器端应用。
+
+## 31  谈谈MySQL支持的事务隔离级别，以及悲观锁和乐观锁的原理和应用场景？
+所谓隔离级别（Isolation Level），就是在数据库事务中，为保证并发数据读写的正确性而提出的定义，它并不是 MySQL 专有的概念，而是源于ANSI/ISO制定的SQL-92标准。
+
+每种关系型数据库都提供了各自特色的隔离级别实现，虽然在通常的定义中是以锁为实现单元，但实际的实现千差万别。以最常见的 MySQL InnoDB 引擎为例，它是基于 MVCC（Multi-Versioning Concurrency Control）和锁的复合实现，按照隔离程度从低到高，MySQL 事务隔离级别分为四个不同层次：
+* 读未提交（Read uncommitted），就是一个事务能够看到其他事务尚未提交的修改，这是最低的隔离水平，允许脏读出现。
+* 读已提交（Read committed），事务能够看到的数据都是其他事务已经提交的修改，也就是保证不会看到任何中间性状态，当然脏读也不会出现。读已提交仍然是比较低级别的隔离，并不保证再次读取时能够获取同样的数据，也就是允许其他事务并发修改数据，允许**不可重复读和幻象读**（Phantom Read）出现。
+* 可重复读（Repeatable reads），保证同一个事务中多次读取的数据是一致的，这是 MySQL InnoDB 引擎的默认隔离级别，但是和一些其他数据库实现不同的是，可以简单认为 MySQL 在可重复读级别不会出现幻象读。
+* 串行化（Serializable），并发事务之间是串行化的，通常意味着读取需要获取共享读锁，更新需要获取排他写锁，如果 SQL 使用 WHERE 语句，还会获取区间锁（MySQL 以 GAP 锁形式实现，可重复读级别中默认也会使用），这是最高的隔离级别。
+
+至于悲观锁和乐观锁，也并不是 MySQL 或者数据库中独有的概念，而是并发编程的基本概念。主要区别在于，操作共享数据时，“悲观锁”即认为数据出现冲突的可能性更大，而“乐观锁”则是认为大部分情况不会出现冲突，进而决定是否采取排他性措施。
+
+反映到 MySQL 数据库应用开发中，悲观锁一般就是利用类似 SELECT … FOR UPDATE 这样的语句，对数据加锁，避免其他事务意外修改数据。乐观锁则与 Java 并发包中的 AtomicFieldUpdater 类似，也是利用 CAS 机制，并不会对数据加锁，而是通过对比数据的时间戳或者版本号，来实现乐观锁需要的版本判断。
+
+我认为前面提到的 MVCC，其本质就可以看作是种乐观锁机制，而排他性的读写锁、双阶段锁等则是悲观锁的实现。
+
+## 32 谈谈Spring Bean的生命周期和作用域？
+Spring Bean 生命周期比较复杂，可以分为**创建和销毁**两个过程。首先，创建 Bean 会经过一系列的步骤，主要包括：
+* 实例化 Bean 对象。
+* 设置 Bean 属性。
+* 如果我们通过各种 Aware 接口声明了依赖关系，则会注入 Bean 对容器基础设施层面的依赖。具体包括 BeanNameAware、BeanFactoryAware 和 ApplicationContextAware，分别会注入 Bean ID、Bean Factory 或者 ApplicationContext。
+* 调用 BeanPostProcessor 的前置初始化方法 postProcessBeforeInitialization。
+* 如果实现了 InitializingBean 接口，则会调用 afterPropertiesSet 方法。
+* 调用 Bean 自身定义的 init 方法。
+* 调用 BeanPostProcessor 的后置初始化方法 postProcessAfterInitialization。
+* 创建过程完毕。
+
+你可以参考下面示意图理解这个具体过程和先后顺序。
+
+![](./images/spring加载过程.webp)
+
+第二，Spring Bean 的销毁过程会依次调用 DisposableBean 的 destroy 方法和 Bean 自身定制的 destroy 方法。
+
+Spring Bean 有五个作用域，其中最基础的有下面两种
+* Singleton，这是 Spring 的默认作用域，也就是为每个 IOC 容器创建唯一的一个 Bean 实例。
+* Prototype，针对每个 getBean 请求，容器都会单独创建一个 Bean 实例。
+
+从 Bean 的特点来看，Prototype 适合有状态的 Bean，而 Singleton 则更适合无状态的情况。另外，使用 Prototype 作用域需要经过仔细思考，毕竟频繁创建和销毁 Bean 是有明显开销的。
+
+如果是 Web 容器，则支持另外三种作用域：
+* Request，为每个 HTTP 请求创建单独的 Bean 实例。
+* Session，很显然 Bean 实例的作用域是 Session 范围。
+* GlobalSession，用于 Portlet 容器，因为每个 Portlet 有单独的 Session，GlobalSession 提供一个全局性的 HTTP Session。
+
+
+
+
+
 
 
 
