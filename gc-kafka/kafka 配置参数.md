@@ -1,4 +1,60 @@
 ## 配置及参数说明
+### Broker 端参数
+所谓静态参数，是指你必须在 Kafka 的配置文件 server.properties 中进行设置的参数，不管你是新增、修改还是删除。同时，你必须重启 Broker 进程才能令它们生效。而主题级别参数的设置则有所不同，Kafka 提供了专门的 kafka-configs 命令来修改它们。
+
+Broker 是需要配置存储信息：
+* log.dirs：这是非常重要的参数，指定了 Broker 需要使用的若干个文件目录路径。要知道这个参数是没有默认值的，这说明什么？这说明它必须由你亲自指定。
+* log.dir：注意这是 dir，结尾没有 s，说明它只能表示单个路径，它是补充上一个参数用的。
+
+在线上生产环境中一定要为log.dirs配置多个路径，优点：
+* 提升读写性能：比起单块磁盘，多块物理磁盘同时读写数据有更高的吞吐量。
+* 能够实现故障转移：即 Failover。这是 Kafka 1.1 版本新引入的强大功能。要知道在以前，只要 Kafka Broker 使用的任何一块磁盘挂掉了，整个 Broker 进程都会关闭。但是自 1.1 开始，这种情况被修正了，坏掉的磁盘上的数据会自动地转移到其他正常的磁盘上，而且 Broker 还能正常工作。还记得上一期我们关于 Kafka 是否需要使用 RAID 的讨论吗？这个改进正是我们舍弃 RAID 方案的基础：没有这种 Failover 的话，我们只能依靠 RAID 来提供保障。
+
+附加信息： **ZooKeeper** 是一个分布式协调框架，负责协调管理并保存 Kafka 集群的所有元数据信息，比如集群都有哪些 Broker 在运行、创建了哪些 Topic，每个 Topic 都有多少分区以及这些分区的 Leader 副本都在哪些机器上等信息。
+
+Kafka 与 ZooKeeper 相关的最重要的参数当属zookeeper.connect，例如：zookeeper.connect = zk1:2181,zk2:2181,zk3:2181
+
+若是两套Kafka集群共用同一个zookeeper，配置方式如下：
+
+     zookeeper.connect参数可以这样指定：zk1:2181,zk2:2181,zk3:2181/kafka1和zk1:2181,zk2:2181,zk3:2181/kafka2
+     即是：
+     zookeeper.connect =  zk1:2181,zk2:2181,zk3:2181/kafka1
+     zookeeper.connect =  zk1:2181,zk2:2181,zk3:2181/kafka2
+
+第三组参数是与 Broker 连接相关的，即客户端程序或其他 Broker 如何与该 Broker 进行通信的设置。有以下三个参数：
+* listeners：学名叫监听器，其实就是告诉外部连接者要通过什么协议访问指定主机名和端口开放的 Kafka 服务。若定义了协议名称，你必须还要指定listener.security.protocol.map参数告诉这个协议底层使用了哪种安全协议，比如指定listener.security.protocol.map=CONTROLLER:PLAINTEXT表示CONTROLLER这个自定义协议底层使用明文不加密传输数据。
+* advertised.listeners：和 listeners 相比多了个 advertised。Advertised 的含义表示宣称的、公布的，就是说这组监听器是 Broker 用于对外发布的。
+* host.name/port：列出这两个参数就是想说你把它们忘掉吧，压根不要为它们指定值，毕竟都是过期的参数了。
+
+操作主机相关的配置：**最好全部使用主机名，即 Broker 端和 Client 端应用配置中全部填写主机名。**
+
+第四组参数是关于 Topic 管理的。下面这三个参数：
+* auto.create.topics.enable：是否允许自动创建 Topic。最好设置成 false，即不允许自动创建 Topic
+* unclean.leader.election.enable：是否允许 Unclean Leader 选举。最新版的 Kafka 中默认就是 false。设置成 false，坚决不能让那些落后太多的副本竞选 Leader。若设置为true，数据有可能就丢失了，因为这些副本保存的数据本来就不全。
+* auto.leader.rebalance.enable：是否允许定期进行 Leader 选举。**生产环境建议设置为false**。设置它的值为 true 表示允许 Kafka 定期地对一些 Topic 分区进行 Leader 重选举，当然这个重选举不是无脑进行的，它要满足一定的条件才会发生。严格来说它与上一个参数中 Leader 选举的最大不同在于，它不是选 Leader，而是换 Leader！比如 Leader A 一直表现得很好，但若auto.leader.rebalance.enable=true，那么有可能一段时间后 Leader A 就要被强行卸任换成 Leader B。
+
+最后一组参数是数据留存方面的：
+* log.retention.{hours|minutes|ms}：这是个“三兄弟”，都是控制一条消息数据被保存多长时间。从优先级上来说 ms 设置最高、minutes 次之、hours 最低。通常情况下我们还是设置 hours 级别的多一些，比如log.retention.hours=168表示默认保存 7 天的数据。
+* log.retention.bytes：这是指定 Broker 为消息保存的总磁盘容量大小。这个值默认是 -1，表明你想在这台 Broker 上保存多少数据都可以。
+* message.max.bytes：控制 Broker 能够接收的最大消息大小。
+
+### Topic 级别参数
+如果同时设置了 Topic 级别参数和全局 Broker 参数，到底听谁的呢？哪个说了算呢？答案就是 **Topic 级别参数会覆盖全局 Broker 参数的值**，而每个 Topic 都能设置自己的参数值，这就是所谓的 Topic 级别参数。
+
+保存消息方面的参数：
+* retention.ms：规定了该 Topic 消息被保存的时长。默认是 7 天，即该 Topic 只保存最近 7 天的消息。一旦设置了这个值，它会覆盖掉 Broker 端的全局参数值。
+* retention.bytes：规定了要为该 Topic 预留多大的磁盘空间。和全局参数作用相似，这个值通常在多租户的 Kafka 集群中会有用武之地。当前默认值是 -1，表示可以无限使用磁盘空间。
+* max.message.bytes：它决定了 Kafka Broker 能够正常接收该 Topic 的最大消息大小。
+
+创建 Topic 时进行设置：
+
+     bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic transaction --partitions 1 --replication-factor 1 --config retention.ms=15552000000 --config max.message.bytes=5242880
+结尾处的--config设置，我们就是在 config 后面指定了想要设置的 Topic 级别参数。
+
+自带的命令kafka-configs来修改 Topic 级别参数：
+
+    bin/kafka-configs.sh --zookeeper localhost:2181 --entity-type topics --entity-name transaction --alter --add-config max.message.bytes=10485760
+Kafka 社区很有可能统一使用kafka-configs脚本来调整 Topic 级别参数，最好使用这种kafka-configs方式。
 
 ### consumer的配置参数
   
