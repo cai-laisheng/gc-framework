@@ -86,5 +86,35 @@ Consumer 端丢失数据主要体现在 Consumer 端要消费的消息不见了�
 
 Kafka 拦截器可以应用于包括客户端监控、端到端系统性能检测、消息审计等多种功能在内的场景。
 
+示例：KafkaProducerConfig、AckModeKafkaConfig
+
+## tcp连接
+多路复用请求，即 multiplexing request，是指将两个或多个数据流合并到底层单一物理连接中的过程。TCP 的多路复用请求会在一条物理连接上创建若干个虚拟连接，每个虚拟连接负责流转各自对应的数据流。其实严格来说，TCP 并不能多路复用，它只是提供可靠的消息交付语义保证，比如自动重传丢失的报文。
+
+在创建 KafkaProducer 实例时，生产者应用会在后台创建并启动一个名为 Sender 的线程，该 Sender 线程开始运行时首先会创建与 Broker 的连接。
+
+TCP 连接是在创建 KafkaProducer 实例时建立的。
+
+TCP 连接还可能在两个地方被创建：一个是在更新元数据后，另一个是在消息发送时。
+
+Producer 端关闭 TCP 连接的方式有两种：一种是用户主动关闭；一种是 Kafka 自动关闭。
+
+## Kafka 消息交付可靠性保障以及精确处理一次语义的实现
+消息交付可靠性保障，是指 Kafka 对 Producer 和 Consumer 要处理的消息提供什么样的承诺。常见的承诺有以下三种：
+* 最多一次（at most once）：消息可能会丢失，但绝不会被重复发送。
+* 至少一次（at least once）：消息不会丢失，但有可能被重复发送。
+* 精确一次（exactly once）：消息不会丢失，也不会被重复发送。
+
+Kafka 默认提供的交付可靠性保障是第二种，即至少一次。
+
+Kafka 做到精确一次是通过两种机制：**幂等性**（Idempotence）和**事务**（Transaction）。
+
+幂等性有很多好处，其最大的优势在于我们可以安全地重试任何幂等性操作，反正它们也不会破坏我们的系统状态。
+
+指定 Producer 幂等性的方法很简单，仅需要设置一个参数即可，即 props.put(“enable.idempotence”, ture)，或 props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG， true)。
+
+首先，它只能保证单分区上的幂等性，即一个幂等性 Producer 能够保证某个主题的一个分区上不出现重复消息，它无法实现多个分区的幂等性。其次，它只能实现单会话上的幂等性，不能实现跨会话的幂等性。这里的会话，你可以理解为 Producer 进程的一次运行。当你重启了 Producer 进程之后，这种幂等性保证就丧失了。
+
+
 
 
