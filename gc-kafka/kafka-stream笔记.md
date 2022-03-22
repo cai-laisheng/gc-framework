@@ -67,3 +67,4 @@ KTable - 每次更新都合并到原记录上。
 * 实时文章分值计算
 头条类文章的分值计算，通过用户的行为实时文章的分值，分值越高就越被推荐。
 
+https://www.cnblogs.com/zhaoguanglu/p/15653148.html
