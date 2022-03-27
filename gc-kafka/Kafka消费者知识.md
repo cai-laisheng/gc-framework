@@ -71,6 +71,25 @@ Consumer 端还有一个参数，用于控制 Consumer 实际消费能力对 Reb
 - 第二类非必要 Rebalance 是 Consumer 消费时间过长导致的。max.poll.interval.ms 参数值的设置显得尤为关键，如 max.poll.interval.ms = 7min ,消费过程消耗 8 min，产生还没消费完就Rebalance了。应设置为max.poll.interval.ms = 9min。总之，你要为你的业务处理逻辑留下充足的时间。这样，Consumer 就不会因为处理这些消息的时间太长而引发 Rebalance 了。
 - 排查一下 Consumer 端的 GC 表现，比如是否出现了频繁的 Full GC 导致的长时间停顿，从而引发了 Rebalance。
 
+### 消费者线程
+所谓**用户主线程**，就是你启动 Consumer 应用程序 main 方法的那个线程，而新引入的**心跳线程**（Heartbeat Thread）只负责定期给对应的 Broker 机器发送心跳请求，以标识消费者应用的存活性（liveness）。
+
+引入这个心跳线程还有一个目的，那就是期望它能将心跳频率与主线程调用 KafkaConsumer.poll 方法的频率分开，从而解耦真实的消息处理逻辑与消费者组成员存活性管理。
+
+鉴于 KafkaConsumer 不是线程安全的事实，我们能够制定两套多线程方案。
+* 1、消费者程序启动多个线程，每个线程维护专属的 KafkaConsumer 实例，负责完整的消息获取、消息处理流程。如下图所示
+
+![](./images/消费者启动多线程.webp)
+
+* 2.消费者程序使用单或多线程获取消息，同时创建多个消费线程执行消息处理逻辑。获取消息的线程可以是一个，也可以是多个，每个线程维护专属的 KafkaConsumer 实例，处理消息则交由特定的线程池来做，从而实现消息获取与消息处理的真正解耦。具体架构如下图所示：
+
+![](./images/消费者启动线程二.webp)
+
+方案对比 
+
+![](./images/消费者方案对比.webp)
+
+
 ## 内部主题
 新版本 Consumer 的位移管理机制其实也很简单，就是将 Consumer 的位移数据作为一条条普通的 Kafka 消息，提交到 __consumer_offsets 中。可以这么说，__consumer_offsets 的主要作用是保存 Kafka 消费者的位移信息。
 
@@ -99,6 +118,77 @@ tombstone 消息，即墓碑消息，也称 delete mark。用于删除 Group 过
 ![](./images/Compact.webp)
 
 **Kafka 提供了专门的后台线程定期地巡检待 Compact 的主题，看看是否存在满足条件的可删除数据**。这个后台线程叫 Log Cleaner。很多实际生产环境中都出现过位移主题无限膨胀占用过多磁盘空间的问题，如果你的环境中也有这个问题，我建议你去检查一下 Log Cleaner 线程的状态，通常都是这个线程挂掉了导致的。
+
+## CommitFailedException异常处理
+所谓 CommitFailedException，顾名思义就是 Consumer 客户端在提交位移时出现了错误或异常，而且还是那种不可恢复的严重异常。
+
+社区给出了两个相应的解决办法（即橙色字部分）
+- 增加期望的时间间隔 max.poll.interval.ms 参数值。
+- 减少 poll 方法一次性返回的消息数量，即减少 max.poll.records 参数值。
+
+**场景一：**
+
+当max.poll.interval.ms = 5 秒，业务消费时间需要消耗6秒，则复现 CommitFailedException 异常。
+
+
+    
+    Properties props = new Properties();
+    props.put("max.poll.interval.ms", 5000);
+    consumer.subscribe(Arrays.asList("test-topic"));
+    
+    while (true) {
+    ConsumerRecords<String, String> records =
+    consumer.poll(Duration.ofSeconds(1));
+    // 使用Thread.sleep模拟真实的消息处理逻辑
+    Thread.sleep(6000L);
+    consumer.commitSync();
+    }
+
+解决方案：
+
+![](./images/commitFailedException场景一.png)
+
+综合以上这 4 个处理方法，我个人推荐你首先尝试采用方法 1 来预防此异常的发生。优化下游系统的消费逻辑是百利而无一害的法子，不像方法 2、3 那样涉及到 Kafka Consumer 端 TPS 与消费延时（Latency）的权衡。如果方法 1 实现起来有难度，那么你可以按照下面的法则来实践方法 2、3。
+
+**场景二：**
+
+如果你的应用中同时出现了**设置相同 group.id 值的消费者组程序和独立消费者程序**，那么当独立消费者程序手动提交位移时，Kafka 就会立即抛出 CommitFailedException 异常，因为 Kafka 无法识别这个具有相同 group.id 的消费者实例，于是就向它返回一个错误，表明它不是消费者组内合法的成员。
+
+## 消费者tcp管理
+和生产者不同的是，构建 KafkaConsumer 实例时是不会创建任何 TCP 连接的，也就是说，当你执行完 new KafkaConsumer(properties) 语句后，你会发现，没有 Socket 连接被创建出来。
+
+TCP 连接是在调用 KafkaConsumer.poll 方法时被创建的。再细粒度地说，在 poll 方法内部有 3 个时机可以创建 TCP 连接。
+
+**1.发起 FindCoordinator 请求时。**
+
+![](./images/消费者tcp.png)
+
+**2.连接协调者时。**
+
+Broker 处理完上一步发送的 FindCoordinator 请求之后，会返还对应的响应结果（Response），显式地告诉消费者哪个 Broker 是真正的协调者，因此在这一步，消费者知晓了真正的协调者后，会创建连向该 Broker 的 Socket 连接。只有成功连入协调者，协调者才能开启正常的组协调操作，比如加入组、等待组分配方案、心跳请求处理、位移获取、位移提交等。
+
+**3.消费数据时。**
+
+消费者会为每个要消费的分区创建与该分区领导者副本所在 Broker 连接的 TCP。举个例子，假设消费者要消费 5 个分区的数据，这 5 个分区各自的领导者副本分布在 4 台 Broker 上，那么该消费者在消费时会创建与这 4 台 Broker 的 Socket 连接。
+
+通常来说，消费者程序会创建 3 类 TCP 连接：
+- 确定协调者和获取集群元数据。
+- 连接协调者，令其执行组成员管理操作。
+- 执行实际的消息获取。
+
+**何时关闭 TCP 连接？**
+
+和生产者类似，消费者关闭 Socket 也分为主动关闭和 Kafka 自动关闭。主动关闭是指你显式地调用消费者 API 的方法去关闭消费者，
+具体方式就是手动调用 KafkaConsumer.close() 方法，或者是执行 Kill 命令，不论是 Kill -2 还是 Kill -9；
+而 Kafka 自动关闭是由消费者端参数 **connection.max.idle.ms** 控制的，该参数现在的默认值是 9 分钟，即如果某个 Socket 连接上连续 9 分钟都没有任何请求“过境”的话，那么消费者会强行“杀掉”这个 Socket 连接。
+
+当第三类 TCP 连接成功创建后，消费者程序就会废弃第一类 TCP 连接，之后在定期请求元数据时，它会改为使用第三类 TCP 连接。也就是说，最终你会发现，第一类 TCP 连接会在后台被默默地关闭掉。对一个运行了一段时间的消费者程序来说，只会有后面两类 TCP 连接存在。
+
+
+
+
+
+
 
 
 
