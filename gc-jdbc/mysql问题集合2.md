@@ -5,13 +5,13 @@
   
 ## 2、MySQL中myisam与innodb的区别，至少5点
   (1)、问5点不同；
-    * 1>.InnoDB支持事务，而MyISAM不支持事务
-    * 2>.InnoDB支持行级锁，而MyISAM支持表级锁
-    * 3>.InnoDB支持MVCC, 而MyISAM不支持
-    * 4>.InnoDB支持外键，而MyISAM不支持
-    * 5>.InnoDB不支持全文索引，而MyISAM支持。
+* 1>.InnoDB支持事务，而MyISAM不支持事务
+* 2>.InnoDB支持行级锁，而MyISAM支持表级锁
+* 3>.InnoDB支持MVCC, 而MyISAM不支持
+* 4>.InnoDB支持外键，而MyISAM不支持
+* 5>.InnoDB不支持全文索引，而MyISAM支持。
     
-  (2)、innodb引擎的4大特性
+(2)、innodb引擎的4大特性
     
     插入缓冲（insert buffer),二次写(double write),自适应哈希索引(ahi),预读(read ahead)
     
@@ -106,6 +106,7 @@
   * key_len：表示索引中使用的字节数，可通过该列计算查询中使用的索引的长度
   * ref：表示上述表的连接匹配条件，即哪些列或常量被用于查找索引列上的值
   * Extra：包含不适合在其他列中显示但十分重要的额外信息
+
   (2)、profile的意义以及使用场景；查询到 SQL 会执行多少时间, 并看出 CPU/Memory 使用量, 执行过程中 Systemlock, Table lock 花多少时间等等
   
 ## 8、备份计划，mysqldump以及xtranbackup的实现原理
