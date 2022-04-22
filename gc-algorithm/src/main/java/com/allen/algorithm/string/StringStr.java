@@ -2,6 +2,8 @@ package com.allen.algorithm.string;
 
 import org.junit.Test;
 
+import java.util.Scanner;
+
 /**
  * @author xuguocai on 2021/6/23 15:47 实现 Sunday 匹配
  *

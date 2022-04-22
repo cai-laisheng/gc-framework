@@ -15,7 +15,7 @@
     
     插入缓冲（insert buffer),二次写(double write),自适应哈希索引(ahi),预读(read ahead)
     
-  (3)、2者selectcount(*)哪个更快，为什么 myisam更快，因为myisam内部维护了一个计数器，可以直接调取。
+  (3)、2者select count(*) 哪个更快，为什么 myisam更快，因为myisam内部维护了一个计数器，可以直接调取。
     
 ## 3、MySQL中varchar与char的区别以及varchar(50)中的50代表的涵义
   * (1)、varchar与char的区别char是一种固定长度的类型，varchar则是一种可变长度的类型
