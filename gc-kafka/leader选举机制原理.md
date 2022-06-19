@@ -16,9 +16,9 @@ kafka在所有broker中选出一个controller，所有Partition的Leader选举�
 
 4. 直接通过RPC向set_p相关的Broker发送LeaderAndISRRequest命令。Controller可以在一个RPC操作中发送多个命令从而提高效率。
 
-![](https://img-blog.csdn.net/20170206170752879?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuc2h1MjAxMg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+![](./images/leader选举过程.png)
 
-![](https://img-blog.csdn.net/20170206170906738?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuc2h1MjAxMg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+![](./images/leader选举方法.png)
 
 ## LeaderAndIsrRequest响应过程
 
@@ -48,7 +48,7 @@ kafka在所有broker中选出一个controller，所有Partition的Leader选举�
 
 对于收到的LeaderAndIsrRequest，Broker主要通过ReplicaManager的becomeLeaderOrFollower处理，流程如下：
 
-![](https://img-blog.csdn.net/20170206171046551?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveWFuc2h1MjAxMg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+![](./images/ReplicaManager处理过程.png)
 
 如何处理所有Replica都不工作
 
