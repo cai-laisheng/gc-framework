@@ -25,7 +25,7 @@ PS：在搜索的时候是会查询 Filesystem Cache 的，但是有部分数据
 
 3、每个分片返回各自优先队列中所有文档的 ID 和排序值 给协调节点，它合并这些值到自己的优先队列中来产生一个全局排序后的结果列表。
 
-![](https://img-blog.csdnimg.cn/img_convert/136df90376402f8e67f04e196582a239.png)
+![](./images/搜索过程.png)
 
     1，客户端发送一个search请求到Node 3上，然后Node 3会创建一个优先级队列它的大小=from+size
     2，接着Node 3转发这个search请求到索引里面每一个主shard或者副本shard上，每个shard会在本地查询然后添加结果到本地的排序好的优先级队列里面。
@@ -40,7 +40,7 @@ PS：在搜索的时候是会查询 Filesystem Cache 的，但是有部分数据
 加了一个预查询的处理，询问 Term 和 Document frequency，这个评分更准确，但是性能会变差。
 
 
-![](https://img-blog.csdnimg.cn/img_convert/c5d4ab1e858d6680b7bac0b2fabfe217.png)
+![](./images/响应过程.png)
 
     1，coordinating 节点标识了那些document需要被拉取出来，并发送一个批量的mutil get请求到相关的shard上
     2，每个shard加载相关document，如果需要他们将会被返回到coordinating 节点上
@@ -75,7 +75,7 @@ https://www.cnblogs.com/programb/p/13019987.html
 ## 5. lucence内部结构是什么。
 Lucene是有索引和搜索的两个过程，包含索引创建，索引，搜索三个要点
 
-![](https://img-blog.csdn.net/20140530195416390?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbG1kY3N6aA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![](./images/lucene信息.png)
 
 **索引(Index)：** 在Lucene中一个索引是放在一个文件夹中的。
 
