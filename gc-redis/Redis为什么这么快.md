@@ -3,7 +3,7 @@
 
 大家好呀，我是捡田螺的小男孩。我们都知道Redis很快，它QPS可达10万（每秒请求数）。**Redis为什么这么快呢**,本文将跟大家一起学习。
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3880491879ed4a228d8f4213d987f6a3~tplv-k3u1fbpfcp-zoom-1.image)
+![](./images/redis快的原因.png)
 
 
 - 公众号：**捡田螺的小男孩**
@@ -13,20 +13,20 @@
 
 我们都知道内存读写是比磁盘读写快很多的。Redis是基于内存存储实现的数据库，相对于数据存在磁盘的数据库，就省去磁盘磁盘I/O的消耗。MySQL等磁盘数据库，需要建立索引来加快查询效率，而Redis数据存放在内存，直接操作内存，所以就很快。
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0d7be13173814a43a60960fe59a48c61~tplv-k3u1fbpfcp-zoom-1.image)
+![](./images/redis内存实现.png)
 
 ## 高效的数据结构
 
 我们知道，MySQL索引为了提高效率，选择了B+树的数据结构。其实合理的数据结构，就是可以让你的应用/程序更快。先看下Redis的数据结构&内部编码图：
 
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4ddd7723cc0e4953b746b13db7a5cea3~tplv-k3u1fbpfcp-zoom-1.image)
+![](./images/数据结构.png)
 
 
 ### SDS简单动态字符串
 
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0e68a18c50f149dda136fc9b1aa73ab8~tplv-k3u1fbpfcp-zoom-1.image)
+![](./images/动态字符串.png)
 
 ```
 struct sdshdr { //SDS简单动态字符串
@@ -61,7 +61,7 @@ struct sdshdr { //SDS简单动态字符串
 
 Redis 作为一个K-V的内存数据库，它使用用一张全局的哈希来保存所有的键值对。这张哈希表，有多个哈希桶组成，哈希桶中的entry元素保存了```*key```和```*value```指针，其中```*key```指向了实际的键，```*value```指向了实际的值。
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13924387cd9e4a2d96d873dba1cc3ca9~tplv-k3u1fbpfcp-zoom-1.image)
+![](./images/哈希.png)
 
 哈希表查找速率很快的，有点类似于Java中的**HashMap**，它让我们在**O(1)** 的时间复杂度快速找到键值对。首先通过key计算哈希值，找到对应的哈希桶位置，然后定位到entry，在entry找到对应的数据。
 
@@ -70,7 +70,7 @@ Redis 作为一个K-V的内存数据库，它使用用一张全局的哈希来�
 
 Redis为了解决哈希冲突，采用了**链式哈希**。链式哈希是指同一个哈希桶中，多个元素用一个链表来保存，它们之间依次用指针连接。
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/131951cd80354c24b62584d71b8fe9f9~tplv-k3u1fbpfcp-zoom-1.image)
+![](./images/哈希表冲突.png)
 
 有些小伙伴可能还会有疑问：哈希冲突链上的元素只能通过指针逐一查找再操作。当往哈希表插入数据很多，冲突也会越多，冲突链表就会越长，那查询效率就会降低了。
 
@@ -80,7 +80,7 @@ Redis为了解决哈希冲突，采用了**链式哈希**。链式哈希是指�
 
 跳跃表是Redis特有的数据结构，它其实就是在**链表的基础上，增加多级索引**，以提高查找效率。跳跃表的简单原理图如下:
 
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0b62d59ffbd945e18f6dfcbf650a6eed~tplv-k3u1fbpfcp-watermark.image)
+![](./images/跳跃表.png)
 
 - 每一层都有一条有序的链表，最底层的链表包含了所有的元素。
 - 跳跃表支持平均 O（logN）,最坏 O（N）复杂度的节点查找，还可以通过顺序性操作批量处理节点。
@@ -91,7 +91,7 @@ Redis为了解决哈希冲突，采用了**链式哈希**。链式哈希是指�
 压缩列表ziplist是列表键和字典键的的底层实现之一。它是由一系列特殊编码的内存块构成的列表， 一个ziplist可以包含多个entry， 每个entry可以保存一个长度受限的字符数组或者整数，如下：
 
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4ce3da7cddbe4e6e94a775151664ed93~tplv-k3u1fbpfcp-zoom-1.image)
+![](./images/压缩列表.png)
 
 - zlbytes ：记录整个压缩列表占用的内存字节数
 - zltail: 尾节点至起始节点的偏移量
@@ -154,7 +154,7 @@ Redis的单线程模型，避免了**CPU不必要的上下文切换**和**竞争
 - IO多路复用其实就是一种同步IO模型，它实现了一个线程可以监视多个文件句柄；一旦某个文件句柄就绪，就能够通知应用程序进行相应的读写操作；而没有文件句柄就绪时,就会阻塞应用程序，交出cpu。
  
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/07838d0a48ef4b38acccb7b52e5435e1~tplv-k3u1fbpfcp-zoom-1.image)
+![](./images/io多路复用.png)
 
 
 > 多路I/O复用技术可以让单个线程高效的处理多个连接请求，而Redis使用用epoll作为I/O多路复用技术的实现。并且Redis自身的事件处理模型将epoll中的连接、读写、关闭都转换为事件，不在网络I/O上浪费过多的时间。
