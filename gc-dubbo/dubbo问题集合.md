@@ -17,11 +17,11 @@
   
   下面这张图可以很清楚的诠释，最重要的一点是，分布式架构可以承受更大规模的并发流量。
   
-  ![](https://img-blog.csdn.net/20181002113705457?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+  ![](./images/分布式流量图.jpeg)
   
   下面是 Dubbo 的服务治理图。
   
-  ![](https://img-blog.csdn.net/20181002113717176?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+  ![](./images/服务治理.jpeg)
   
 ## 3、Dubbo 和 Spring Cloud 有什么区别？
   两个没关联，如果硬要说区别，有以下几点。
@@ -32,7 +32,7 @@
   
   2）组成部分不同
   
-  ![](https://img-blog.csdn.net/20181002113728152?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+  ![](./images/组建组成.jpeg)
   
 ## 4、dubbo都支持什么协议，推荐用哪种？
   
@@ -83,10 +83,11 @@ redis： 基于redis实现的RPC协议
   Dubbo 的服务容器只是一个简单的 Main 方法，并加载一个简单的 Spring 容器，用于暴露服务。
   
 ## 7、Dubbo里面有哪几种节点角色？
-  ![](https://img-blog.csdn.net/20181002113745869?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+  ![](./images/节点角色.jpeg)
   
 ## 8、画一画服务注册与发现的流程图
-  ![](https://img-blog.csdn.net/20181002113850939?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+  ![](./images/dubbo工作流程.jpeg)
   
 ## 9、Dubbo默认使用什么注册中心，还有别的选择吗？
   推荐使用 Zookeeper 作为注册中心，还有 Redis、Multicast、Simple 注册中心，但不推荐。
@@ -96,11 +97,12 @@ redis： 基于redis实现的RPC协议
   2）Java API 配置方式
   
 ## 11、Dubbo 核心的配置有哪些？
-  ![](https://img-blog.csdn.net/20181002113904858?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+  ![](./images/核心配置.jpeg)
   
   配置之间的关系见下图:
   
-  ![](https://img-blog.csdn.net/20181002113916948?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+  ![](./images/核心配置关系.jpeg)
   
 ## 12、在 Provider 上可以配置的 Consumer 端的属性有哪些？
   1）timeout：方法调用超时
@@ -121,10 +123,11 @@ redis： 基于redis实现的RPC协议
   Dubbo 默认使用 Netty 框架，也是推荐的选择，另外内容还集成有Mina、Grizzly。
   
 ## 16、Dubbo有哪几种集群容错方案，默认是哪种？
-  ![](https://img-blog.csdn.net/20181002113930188?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+  ![](./images/容错方案.jpeg)
   
 ## 17、Dubbo有哪几种负载均衡策略，默认是哪种？
-  ![](https://img-blog.csdn.net/20181002113941952?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+  ![](./images/负载均衡策略.jpeg)
   
 ## 18、注册了多个同一样的服务，如果测试指定的某一个服务呢？
   可以配置环境点对点直连，绕过注册中心，将以服务接口为单位，忽略注册中心的提供者列表。
@@ -148,12 +151,12 @@ redis： 基于redis实现的RPC协议
   
   异步调用流程图如下：
   
-  ![](https://img-blog.csdn.net/20181002113955917?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+  ![](./images/异步调用逻辑.jpeg)
   
 ## 24、Dubbo支持分布式事务吗？
    目前暂时不支持，后续可能采用基于 JTA/XA 规范实现，如以图所示。
    
-   ![](https://img-blog.csdn.net/20181002114007181?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vYWt1bg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+   ![](./images/回滚逻辑.jpeg)
    
 ## 25、Dubbo telnet 命令能做什么？
   dubbo 通过 telnet 命令来进行服务治理，具体使用看这篇文章《dubbo服务调试管理实用命令》。

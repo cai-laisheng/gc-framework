@@ -18,13 +18,16 @@ MQ、ES、Redis、Dubbo，上来先问你一些思考性的问题、原理，比
 - 第八层：exchange 层，信息交换层，封装请求响应模式，同步转异步
 - 第九层：transport 层，网络传输层，抽象 mina 和 netty 为统一接口
 - 第十层：serialize 层，数据序列化层
+
+![](./images/dubbo架构.jpeg)
+
 ## 工作流程
 - 第一步：provider 向注册中心去注册
 - 第二步：consumer 从注册中心订阅服务，注册中心会通知 consumer 注册好的服务
 - 第三步：consumer 调用 provider
 - 第四步：consumer 和 provider 都异步通知监控中心
 
-![](https://adjava.netlify.app/docs/distributed-system/images/dubbo-operating-principle.png)
+![](./images/dubbo工作流程.jpeg)
 
 ## 注册中心挂了可以继续通信吗？
 可以，因为刚开始初始化的时候，消费者会将提供者的地址等信息拉取到本地缓存，所以注册中心挂了可以继续通信。
