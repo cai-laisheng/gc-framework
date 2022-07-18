@@ -34,8 +34,23 @@ public class StaticDemo {
         System.out.println("静态方法");
     }
 
+    public static String test1(){
+
+        try {
+            System.out.println("5555555");
+            return "try";
+        }catch (Exception e){
+            System.out.println("8888");
+            return "Exception";
+        }finally {
+            System.out.println("99999");
+            return "finally";
+        }
+    }
+
     public static void main(String[] args) {
-        StaticDemo staticDemo = new StaticDemo();
-        StaticDemo.test();
+//        StaticDemo staticDemo = new StaticDemo();
+//        StaticDemo.test();
+        System.out.println(test1());
     }
 }
