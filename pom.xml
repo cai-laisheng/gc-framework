@@ -47,6 +47,8 @@
         <module>gc-bigdata</module>
         <module>gc-bigdata/gc-hdfs</module>
         <module>gc-spider</module>
+        <module>untitled</module>
+        <module>gc-ddd</module>
     </modules>
 
     <properties>

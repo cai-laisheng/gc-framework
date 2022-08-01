@@ -1,0 +1,39 @@
+<configuration status="warn">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} %t [%p] %c{1} (%F:%L) %msg%n %ex" />
+        </Console>
+
+        <XMDFile name="ShepherdLog" fileName="shepherd.log">
+            <PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} %t [%p] %c{1} (%F:%L) %msg%n %ex" />
+        </XMDFile>
+
+        <!--XMDFile异步磁盘日志配置示例-->
+        <!--默认按天&按512M文件大小切分日志，默认最多保留30个日志文件。-->
+        <!--注意：fileName前会自动增加文件路径，只配置文件名即可-->
+        <XMDFile name="LocalServiceLog" fileName="request.log">
+            <PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} %t [%p] %c{1} (%F:%L) %msg%n %ex" />
+        </XMDFile>
+
+        <!-- 使用自定义的AsyncScribeAppender代替原有的AsycncAppender -->
+        <AsyncScribe name="LogCenterAsync" blocking="false">
+            <!-- 在指定日志名方面，scribeCategory 和 appkey 两者至少存在一种，且 scribeCategory 高于 appkey。-->
+            <!-- <Property name="scribeCategory">data_update_test_lc</Property> -->
+            <LcLayout/>
+        </AsyncScribe>
+    </appenders>
+
+    <loggers>
+        <logger name="com.sankuai.shepherd" level="info" additivity="false">
+            <AppenderRef ref="ShepherdLog" level="warn"/>
+            <AppenderRef ref="LogCenterAsync" level="info"/>
+        </logger>
+
+        <root level="info">
+            <!--Console日志是同步、阻塞的，推荐只在本地调试时使用，线上将该配置去掉-->
+            <!--appender-ref ref="Console" /-->
+            <appender-ref ref="LocalServiceLog"/>
+            <appender-ref ref="LogCenterAsync"/>
+        </root>
+    </loggers>
+</configuration>
