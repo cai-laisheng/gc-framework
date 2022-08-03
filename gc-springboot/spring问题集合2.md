@@ -11,7 +11,7 @@ spring bean 容器的生命周期流程如下：
 * 8、如果 bean 实现 DisposableBean 接口，当 spring 容器关闭时，会调用 destory()。
 * 9、如果为 bean 指定了 destroy 方法（ <bean> 的 destroy-method 属性），那么将调用它。
 
-![](images/QQ图片20210411210208.png)
+![](images/spring生命周期流程.png)
 
 ## 自动装配有哪些方式？
 Spring 容器能够自动装配 bean。也就是说，可以通过检查 BeanFactory 的内容让 Spring 自动解析 bean 的协作者。
