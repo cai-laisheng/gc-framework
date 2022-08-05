@@ -1,6 +1,7 @@
 package com.allen.sys.controller;
 
 import com.allen.sys.annotation.MethodLog;
+import com.allen.sys.annotation.NotControllerResponseAdvice;
 import com.allen.sys.common.ResponseBean;
 import com.allen.sys.common.ResponseBeanUtil;
 import com.allen.sys.constants.ResponseCodeEnum;
@@ -28,6 +29,13 @@ public class SysRoleContronller {
 
     @Autowired
     SysRoleService sysRoleService;
+
+    @NotControllerResponseAdvice
+    @GetMapping("/health")
+    public String health() {
+        return "success";
+    }
+
     /**
      * List page info.
      *
@@ -60,9 +68,8 @@ public class SysRoleContronller {
      */
     @MethodLog(content = "获取角色信息接口")
     @GetMapping(value = "/role/view")
-    public ResponseBean getRole(Integer roleId) {
-        SysRoleVo role = sysRoleService.getRoleById(roleId);
-        return ResponseBeanUtil.ok(role);
+    public SysRoleVo getRole(Integer roleId) {
+        return sysRoleService.getRoleById(roleId);
     }
 
     /**

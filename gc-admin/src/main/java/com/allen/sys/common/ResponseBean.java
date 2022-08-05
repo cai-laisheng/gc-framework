@@ -28,6 +28,28 @@ public class ResponseBean<T>  implements Serializable {
      * */
     private T data;
 
+    public ResponseBean(){
+
+    }
+
+    public ResponseBean(T data){
+        this.data = data;
+        this.responseCode = ResponseCodeEnum.SC.getCode();
+        this.responseMsg = ResponseCodeEnum.SC.getfMsg();
+    }
+
+    public ResponseBean(ResponseCodeEnum codeEnum,T data){
+        this.data = data;
+        this.responseCode = codeEnum.getCode();
+        this.responseMsg = codeEnum.getfMsg();
+    }
+
+    public ResponseBean(int responseCode, String responseMsg, T data) {
+        this.responseCode = responseCode;
+        this.responseMsg = responseMsg;
+        this.data = data;
+    }
+
     public boolean isSuccess() {
         return isSuccess;
     }
