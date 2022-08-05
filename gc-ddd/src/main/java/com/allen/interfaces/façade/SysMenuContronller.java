@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
- * @author: allen小哥 2020-04-14 11:11
+ * @author: allen小哥 2020-04-14 11:11 菜单代码示例
  **/
 @RestController
 @CrossOrigin
@@ -21,19 +21,7 @@ public class SysMenuContronller {
     SysMenuAppService sysMenuAppService;
 
     /**
-     * 获取用户登录之后的导航菜单
-     * 2018-11-13 新调整，增加按钮级别的菜单权限，获取菜单的接口做了调整，除了返回菜单树以外，还返回了用户的permissions
-     *
-     * @return
-     */
-    @GetMapping(value = "/menu/nav")
-    public ResponseBean getMenuNav() {
-
-        return ResponseBeanUtil.ok();
-    }
-
-    /**
-     * Gets menu tree.
+     * Gets menu tree. 接口交互层 --》应用层 --》基础设施层
      *
      * @return the menu tree
      */
@@ -44,7 +32,7 @@ public class SysMenuContronller {
     }
 
     /**
-     * Gets menu list.
+     * Gets menu list. 接口交互层 --》应用层 --》基础设施层
      *
      * @return the menu list
      */
@@ -76,8 +64,7 @@ public class SysMenuContronller {
      */
     @GetMapping(value = "/menu/getMenuInfo")
     public ResponseBean getMenu(Integer menuId) {
-
-        return ResponseBeanUtil.ok();
+        return ResponseBeanUtil.ok(sysMenuAppService.getMenu(menuId));
     }
 
     /**

@@ -1,9 +1,11 @@
 package com.allen.domain.aggregate.service.impl;
 
 import com.allen.domain.aggregate.entity.SysMenuDo;
+import com.allen.domain.aggregate.repository.SysMenuRepository;
 import com.allen.domain.aggregate.service.SysMenuDomainService;
 import com.allen.interfaces.assembler.SysMenuAssembler;
 import com.allen.interfaces.dto.SysMenuDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,10 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class SysMenuDomainServiceImpl implements SysMenuDomainService {
 
+    @Autowired
+    private SysMenuRepository sysMenuRepository;
+
     @Override
     public void saveMenu(SysMenuDto menuDto) {
-        SysMenuDo sysMenuDo = SysMenuAssembler.INSTANCT.conver(menuDto);
-
+        sysMenuRepository.saveMenu(SysMenuAssembler.INSTANCT.conver(menuDto));
     }
 
 }

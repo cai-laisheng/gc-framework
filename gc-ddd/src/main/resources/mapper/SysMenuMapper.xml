@@ -21,26 +21,4 @@
     <result column="del_flag" jdbcType="BIT" property="delFlag" />
   </resultMap>
 
-  <select id="findListByParam" resultMap="BaseResultMap">
-    select *
-    FROM sys_menu a
-    <if test="!param.isAdmin">
-      JOIN sys_role_menu rm ON rm.menu_id = a.id
-      JOIN sys_role r ON r.id = rm.role_id AND r.enabled = '1' AND r.del_flag = '0'
-      JOIN sys_user_role ur ON ur.role_id = r.id and ur.user_id = #{param.userId}
-    </if>
-    WHERE a.del_flag = '0'
-    ORDER BY a.sort asc
-  </select>
-
-  <select id="findListByUserId" resultMap="BaseResultMap">
-    select *
-    FROM sys_menu a
-    JOIN sys_role_menu rm ON rm.menu_id = a.id
-    JOIN sys_role r ON r.id = rm.role_id AND r.enabled = '1' AND r.del_flag = '0'
-    JOIN sys_user_role ur ON ur.role_id = r.id and ur.user_id = #{userId}
-    WHERE a.del_flag = '0'
-    ORDER BY a.sort asc
-  </select>
-
 </mapper>

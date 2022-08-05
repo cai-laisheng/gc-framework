@@ -22,13 +22,16 @@ public class SysMenuRepositoryImpl implements SysMenuRepository {
     public void saveMenu(SysMenuDo menuDo) {
         SysMenuPo sysMenuPo = SysMenuAssembler.INSTANCT.converPo(menuDo);
         if (sysMenuPo.getId() == null){
+            sysMenuPo.setCreateMsg();
             sysMenuMapper.insert(sysMenuPo);
         }else {
             SysMenuPo systmp = sysMenuMapper.selectByPrimaryKey(sysMenuPo.getId());
             if (systmp == null){
                 sysMenuPo.setId(null);
+                sysMenuPo.setCreateMsg();
                 sysMenuMapper.insert(sysMenuPo);
             }else {
+                sysMenuPo.setUpdateMsg();
                 sysMenuMapper.updateByPrimaryKeySelective(sysMenuPo);
             }
         }
