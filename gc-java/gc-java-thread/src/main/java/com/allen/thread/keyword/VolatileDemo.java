@@ -1,4 +1,4 @@
-package com.allen.thread.volatitile;
+package com.allen.thread.keyword;
 
 import lombok.extern.slf4j.Slf4j;
 
