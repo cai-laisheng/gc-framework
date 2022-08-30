@@ -10,6 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gc-ddd</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>gc-ddd-app</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
