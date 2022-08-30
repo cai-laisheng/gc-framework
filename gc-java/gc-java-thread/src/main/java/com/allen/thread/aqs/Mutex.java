@@ -1,4 +1,4 @@
-package com.allen.thread.lock;
+package com.allen.thread.aqs;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
