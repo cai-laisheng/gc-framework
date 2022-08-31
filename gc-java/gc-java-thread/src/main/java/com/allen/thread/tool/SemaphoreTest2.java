@@ -1,4 +1,4 @@
-package com.allen.thread.semaphore;
+package com.allen.thread.tool;
 
 import java.util.concurrent.Semaphore;
 

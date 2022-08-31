@@ -19,10 +19,28 @@ public class ReentrantLockTest {
     private static volatile boolean flag = false;
 
     public static void main(String[] args) {
-        Thread waiter = new Thread(new Waiter());
-        waiter.start();
-        Thread signaler = new Thread(new Signaler());
-        signaler.start();
+//        Thread waiter = new Thread(new Waiter());
+//        waiter.start();
+//        Thread signaler = new Thread(new Signaler());
+//        signaler.start();
+
+        lockTest();
+    }
+
+    public static void lockTest(){
+        for (int i = 0; i < 5; i++) {
+            Thread thread = new Thread(() -> {
+                lock.lock();
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    lock.unlock();
+                }
+            });
+            thread.start();
+        }
     }
 
     static class Waiter implements Runnable{

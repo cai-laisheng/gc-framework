@@ -1,4 +1,4 @@
-package com.allen.thread.latch;
+package com.allen.thread.tool;
 
 import java.util.concurrent.CyclicBarrier;
 

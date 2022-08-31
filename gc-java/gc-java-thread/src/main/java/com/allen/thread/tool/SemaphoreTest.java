@@ -1,4 +1,4 @@
-package com.allen.thread.semaphore;
+package com.allen.thread.tool;
 
 import lombok.extern.slf4j.Slf4j;
 
