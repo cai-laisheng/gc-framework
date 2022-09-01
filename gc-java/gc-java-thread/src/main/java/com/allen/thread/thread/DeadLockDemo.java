@@ -1,4 +1,4 @@
-package com.allen.thread.dead;
+package com.allen.thread.thread;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
