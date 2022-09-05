@@ -246,7 +246,7 @@ transient Entry[] table;
 
 其中，Entry 就是存储数据的键值对，它包含了四个字段。从 next 字段我们可以看出 Entry 是一个链表，即每个桶会存放一个链表。
 
-![](collection//entrylink.png" width="600)
+![](collection//entrylink.png)
 
 JDK 1.8 使用 Node 类型存储一个键值对，它依然继承自 Entry，因此可以按照上面的存储结构来理解。
 
@@ -306,7 +306,7 @@ map.put("K3", "V3");
 - 插入 &lt;K2,V2> 键值对，先计算 K2 的 hashCode 为 118，使用除留余数法得到所在的桶下标 118%16=6。
 - 插入 &lt;K3,V3> 键值对，先计算 K3 的 hashCode 为 118，使用除留余数法得到所在的桶下标 118%16=6，插在 &lt;K2,V2> 后面。
 
-![](collection//hashmap查找.png" width="600)
+![](collection//hashmap查找.png)
 
 查找需要分成两步进行：
 
@@ -328,11 +328,11 @@ map.put("K3", "V3");
 和扩容相关的参数主要有：capacity、size、threshold 和 load_factor。
 
 | 参数 | 含义 |
-| :--: | :-- |
-| capacity | table 的容量大小，默认为 16，需要注意的是 capacity 必须保证为 2 的次方。|
-| size | table 的实际使用量。 |
-| threshold | size 的临界值，size 必须小于 threshold，如果大于等于，就必须进行扩容操作。 |
-| load_factor | table 能够使用的比例，threshold = capacity * load_factor。|
+| :---: | :---: |
+| **capacity** | table 的容量大小，默认为 16，需要注意的是 capacity 必须保证为 2 的次方。|
+| **size** | table 的实际使用量。 |
+| **threshold** | size 的临界值，size 必须小于 threshold，如果大于等于，就必须进行扩容操作。 |
+| **load_factor** | table 能够使用的比例，threshold = capacity * load_factor。|
 
 ```java
 static final int DEFAULT_INITIAL_CAPACITY = 16;
