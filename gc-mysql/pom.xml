@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gc-jdbc</artifactId>
+    <artifactId>gc-mysql</artifactId>
     <description>数据连接方式</description>
 
     <properties>
