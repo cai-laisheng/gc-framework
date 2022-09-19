@@ -37,6 +37,24 @@ MySQL的锁机制最显著的特点是**不同的存储引擎支持不同的锁�
 
 MySQL的行锁是在引擎层由各个引擎自己实现的。但并不是所有的引擎都支持行锁，比如 MyISAM引擎就不支持行锁。不支持行锁意味着并发控制只能使用表锁，对于这种引擎的表，同 一张表上任何时刻只能有一个更新在执行，这就会影响到业务并发度。InnoDB是支持行锁的， 这也是MyISAM被InnoDB替代的重要原因之一。
 
+**解决幻读：**
+
+MVCC加上间隙锁的方式
+   * 在快照读读情况下，mysql通过mvcc来避免幻读。
+   * 在当前读读情况下，mysql通过next-key来避免幻读。锁住某个条件下的数据不能更改。
+
+快照读：简单的select操作，属于快照读，不加锁。
+
+    select * from table where ?;
+
+当前读：特殊的读操作，插入/更新/删除操作，属于当前读，需要加锁。
+
+    select * from table where ? lock in share mode;
+    select * from table where ? for update;
+    insert into table values (…);
+    update table set ? where ?;
+    delete from table where ?;
+
 ### 2.表锁
 表级锁是mysql锁中粒度最大的一种锁，表示当前的操作对整张表加锁，**资源开销比行锁少，不会出现死锁的情况，但是发生锁冲突的概率很大**，因为同 一张表上任何时刻只能有一个更新在执行。被大部分的mysql引擎支持，**MyISAM和InnoDB都支持表级锁，但是InnoDB默认的是行级锁。**
 
