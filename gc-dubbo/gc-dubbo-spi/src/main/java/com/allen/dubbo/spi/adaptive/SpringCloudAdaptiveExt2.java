@@ -1,6 +1,7 @@
 package com.allen.dubbo.spi.adaptive;
 
-import com.alibaba.dubbo.common.URL;
+
+import org.apache.dubbo.common.URL;
 
 /**
  * @Author Allen 2021/4/16 20:39

@@ -1,7 +1,6 @@
 package com.allen.sys.model.vo;
 
 import com.allen.sys.model.po.SysRoleMenu;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Id;
 import java.util.ArrayList;
@@ -57,7 +56,6 @@ public class SysRoleVo  {
 		this.id = id;
 	}
 
-	@Length(min = 1, max = 100)
     public String getName() {
         return name;
     }
@@ -74,7 +72,6 @@ public class SysRoleVo  {
         this.enabled = enabled;
     }
 
-    @Length(min = 0, max = 255)
     public String getRemarks() {
         return remarks;
     }

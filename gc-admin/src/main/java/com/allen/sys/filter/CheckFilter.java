@@ -1,27 +1,27 @@
 package com.allen.sys.filter;
 
-import cn.hutool.core.util.StrUtil;
 import com.allen.sys.model.po.SysUser;
 import com.allen.sys.service.SystemService;
 import com.allen.sys.utils.ThreadLocalUtil;
-import com.allen.sys.utils.TokenUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-//@Configuration
-public class CheckFilter extends HandlerInterceptorAdapter {
+@Configuration
+public class CheckFilter implements HandlerInterceptor {
     private Logger LOGGER = LoggerFactory.getLogger(CheckFilter.class);
     private static  Map<String,Long> userLoginMap = new HashMap<String,Long>();
 
@@ -41,14 +41,14 @@ public class CheckFilter extends HandlerInterceptorAdapter {
         }else{
 //            获取用户数据
             String token = request.getHeader("Authorization");
-            if (StrUtil.isBlank(token)){
+            if (StringUtils.isBlank(token)){
                 return true;
             }
             //验证token格式
-            if(!TokenUtils.verify(token)){
-                System.out.println("token格式不准确");
-                return false;
-            }
+//            if(!TokenUtils.verify(token)){
+//                System.out.println("token格式不准确");
+//                return false;
+//            }
             if(userLoginMap.get(token)==null){
                 userLoginMap.put(token,System.currentTimeMillis());
                 SysUser userMsgByToken = systemService.getUserMsgByToken(token);

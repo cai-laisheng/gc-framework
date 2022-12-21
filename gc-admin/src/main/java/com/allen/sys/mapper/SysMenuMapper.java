@@ -7,7 +7,7 @@ import tk.mybatis.mapper.common.Mapper;
 import java.util.List;
 import java.util.Map;
 
-public interface SysMenuMapper extends Mapper<SysMenu> {
+public interface SysMenuMapper extends BaseMapper<SysMenu> {
     /**
      * 根据用户id判断用户是否超级管理员
      *

@@ -7,7 +7,7 @@ import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
-public interface SysOperationLogMapper extends Mapper<SysOperationLog> {
+public interface SysOperationLogMapper extends BaseMapper<SysOperationLog> {
 
     /**
      * 分页

@@ -1,8 +1,6 @@
 package com.allen.sys.model.vo;
 
-import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -110,7 +108,6 @@ public class SysMenuVo implements Serializable {
         this.parentIds = parentIds;
     }
 
-    @Length(min = 1, max = 100)
     public String getText() {
         return text;
     }
@@ -119,7 +116,6 @@ public class SysMenuVo implements Serializable {
         this.text = text;
     }
 
-    @Length(min = 0, max = 2000)
     public String getUrl() {
         return url;
     }
@@ -128,7 +124,6 @@ public class SysMenuVo implements Serializable {
         this.url = url;
     }
 
-    @Length(min = 0, max = 100)
     public String getIcon() {
         return icon;
     }
@@ -145,7 +140,6 @@ public class SysMenuVo implements Serializable {
 		this.targetType = targetType;
 	}
 
-	@NotNull
     public Integer getSort() {
         return sort;
     }
@@ -162,7 +156,6 @@ public class SysMenuVo implements Serializable {
         isShow = show;
     }
 
-    @Length(min = 0, max = 200)
     public String getPermission() {
         return permission;
     }
@@ -171,7 +164,6 @@ public class SysMenuVo implements Serializable {
         this.permission = permission;
     }
 
-    @Length(min = 0, max = 255)
     public String getRemarks() {
         return remarks;
     }

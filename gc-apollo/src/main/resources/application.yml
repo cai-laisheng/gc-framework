@@ -1,5 +1,5 @@
-#server:
-#  port: 10866
+server:
+  port: 10866
 
 app:
   id: gc-framework

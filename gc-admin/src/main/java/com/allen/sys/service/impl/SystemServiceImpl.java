@@ -1,7 +1,5 @@
 package com.allen.sys.service.impl;
 
-import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONArray;
 import com.allen.sys.mapper.SysMenuMapper;
 import com.allen.sys.mapper.SysRoleMapper;
 import com.allen.sys.mapper.SysUserMapper;
@@ -18,8 +16,8 @@ import com.allen.sys.service.SystemService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -184,7 +182,7 @@ public class SystemServiceImpl implements SystemService {
         Example example = new Example(SysUserRole.class);
         example.createCriteria().andEqualTo("userId",userRoleDto.getUserId());
         userRoleMapper.deleteByExample(example);
-        if (StrUtil.isBlank(userRoleDto.getRoleId())){
+        if (StringUtils.isBlank(userRoleDto.getRoleId())){
             return;
         }
         String[] roleIds = userRoleDto.getRoleId().split(",");

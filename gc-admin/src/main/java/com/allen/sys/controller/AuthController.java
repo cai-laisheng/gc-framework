@@ -14,7 +14,6 @@ import com.allen.sys.model.po.SysUserLogin;
 import com.allen.sys.model.vo.UserLoginVo;
 import com.allen.sys.service.SystemService;
 import com.allen.sys.utils.AddressIpUtil;
-import com.allen.sys.utils.TokenUtils;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +22,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +55,7 @@ public class AuthController {
 		if (sysUser == null){
 			return ResponseBeanUtil.fail(ResponseCodeEnum.ACCOUNT_PASSWORD);
 		}
-		String token = TokenUtils.token(sysUser.getName(),sysUser.getPassword());
+		String token = "99999999999";
 		UserLoginVo loginVo = new UserLoginVo();
 		loginVo.setLoginName(sysUser.getLoginName());
 		loginVo.setUserName(sysUser.getName());
@@ -98,7 +96,7 @@ public class AuthController {
      * @return the response entity
      */
     @PostMapping(value = "/user/info")
-    public ResponseBean saveCurrentUserInfo(@Valid @RequestBody SysUser user) {
+    public ResponseBean saveCurrentUserInfo( @RequestBody SysUser user) {
 		SysUser authUser = new SysUser();
         //只能更新当前用户信息
         if (authUser.getId().equals(user.getId())) {

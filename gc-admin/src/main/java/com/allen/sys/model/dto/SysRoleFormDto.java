@@ -1,6 +1,5 @@
 package com.allen.sys.model.dto;
 
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -53,7 +52,6 @@ public class SysRoleFormDto implements Serializable {
 		this.id = id;
 	}
 
-	@Length(min = 1, max = 100)
     public String getName() {
         return name;
     }
@@ -70,7 +68,6 @@ public class SysRoleFormDto implements Serializable {
         this.enabled = enabled;
     }
 
-    @Length(min = 0, max = 255)
     public String getRemarks() {
         return remarks;
     }

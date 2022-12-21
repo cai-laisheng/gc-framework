@@ -16,7 +16,6 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -80,7 +79,7 @@ public class SysRoleContronller {
      */
     @MethodLog(content = "保存角色信息接口")
     @PostMapping(value = "/role/edit")
-    public ResponseBean saveRole(@Valid @RequestBody SysRoleFormDto role) {
+    public ResponseBean saveRole( @RequestBody SysRoleFormDto role) {
         SysRole sysRole = sysRoleService.saveRole(role);
         return ResponseBeanUtil.ok(sysRole);
     }

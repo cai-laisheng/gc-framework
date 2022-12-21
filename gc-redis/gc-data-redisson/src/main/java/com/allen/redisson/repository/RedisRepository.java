@@ -36,7 +36,7 @@ public class RedisRepository {
     /**
      * 默认编码
      */
-    private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     /**
      * Spring Redis Template
@@ -648,12 +648,7 @@ public class RedisRepository {
             result.add(cursor.next().toString());
         }
         //切记这里一定要关闭，否则会耗尽连接数。报Cannot get Jedis connection; nested exception is redis.clients.jedis.exceptions.JedisException: Could not get a
-        try {
-            cursor.close();
-        } catch (IOException e) {
-            LOGGER.error("scan error: " + e.getLocalizedMessage());
-            e.printStackTrace();
-        }
+        cursor.close();
 
         return result;
 

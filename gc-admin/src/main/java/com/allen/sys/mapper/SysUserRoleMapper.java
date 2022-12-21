@@ -4,7 +4,7 @@ import com.allen.sys.model.po.SysUserRole;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
-public interface SysUserRoleMapper extends Mapper<SysUserRole> {
+public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
 
     /**
      * 校验用户是否被授权

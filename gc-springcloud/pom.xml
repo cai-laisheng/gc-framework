@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.5.RELEASE</version>
+        <version>3.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.allen</groupId>
@@ -17,17 +17,12 @@
     <description>springcloud相关笔记或者示例</description>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <!--Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装-->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-            <version>5.1.0</version>
-        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -36,7 +31,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.RELEASE</version>
+                <version>2022.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
