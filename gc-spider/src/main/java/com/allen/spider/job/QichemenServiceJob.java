@@ -1,14 +1,11 @@
 package com.allen.spider.job;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.allen.spider.common.HttpMethod;
 import com.allen.spider.utils.HttpSpiderUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -48,9 +45,8 @@ public class QichemenServiceJob {
         // 20页数据为基础
         for (int i=1;i<20;i++){
             String tmpUrl = soHuUrl+i;
-            String result = HttpUtil.get(tmpUrl);
-
-            if (StrUtil.isBlank(result)){
+            String result = HttpSpiderUtil.sendGet(tmpUrl,null);
+            if (StringUtils.isBlank(result)){
                 return;
             }
 
@@ -98,7 +94,7 @@ public class QichemenServiceJob {
                 content = HttpSpiderUtil.send(qichemenUrl,null,headerMap,formParamMap,null,null, HttpMethod.POST);
             }
 
-            if (StrUtil.isBlank(content) || "Error".equals(content)){
+            if (StringUtils.isBlank(content) || "Error".equals(content)){
                 log.error("爬取汽车门数据异常,执行次数:{},异常：{}",i,content);
                 break;
             }

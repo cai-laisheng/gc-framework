@@ -1,8 +1,8 @@
 package com.allen.spider.utils;
 
-import cn.hutool.core.util.StrUtil;
 import com.allen.spider.common.HttpMethod;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -22,7 +22,6 @@ import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.springframework.util.StringUtils;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -177,7 +176,7 @@ public class HttpSpiderUtil {
         }
         // 虚拟IP 处理
         String ip = randIP();
-        if (StrUtil.isNotBlank(ip)){
+        if (StringUtils.isNotBlank(ip)){
             httpRequest.addHeader("x-forwarded-for",ip);
         }
         return httpRequest;
@@ -198,7 +197,7 @@ public class HttpSpiderUtil {
         int port = 443;
         if (host.contains(":")) {
             int i = host.indexOf(":");
-            port = new Integer(host.substring(i + 1));
+            port = Integer.valueOf(host.substring(i + 1));
         }
         return port;
     }

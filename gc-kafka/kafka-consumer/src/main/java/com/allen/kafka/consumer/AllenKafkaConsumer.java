@@ -91,7 +91,7 @@ public class AllenKafkaConsumer {
      */
 //    @KafkaListener(topics = "qywx-ucm-externalUserMsg",groupId = "allenGroup3")
     public void onMessage(@Payload String message,
-                          @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
+                          @Header(KafkaHeaders.PARTITION) int partition,
                           @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
                           @Header(KafkaHeaders.OFFSET) String offset,
                           Consumer consumer) {

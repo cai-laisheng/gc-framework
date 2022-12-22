@@ -1,13 +1,13 @@
 package com.allen.upload.util;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 
@@ -215,13 +215,13 @@ public final class DownloadUtil {
             logger.debug("---------------不是从开始进行下载！服务器即将开始断点续传...");
             switch (rangeSwitch) {
                 case 1: { // 针对 bytes=27000- 的请求
-                    String contentRange = new StringBuffer("bytes ").append(new Long(pastLength).toString()).append("-")
-                            .append(new Long(fileLength - 1).toString()).append("/").append(new Long(fileLength).toString()).toString();
+                    String contentRange = new StringBuffer("bytes ").append( Long.valueOf(pastLength).toString()).append("-")
+                            .append( Long.valueOf(fileLength - 1).toString()).append("/").append(new Long(fileLength).toString()).toString();
                     response.setHeader("Content-Range", contentRange);
                     break;
                 }
                 case 2: { // 针对 bytes=27000-39000 的请求
-                    String contentRange = rangeBytes + "/" + new Long(fileLength).toString();
+                    String contentRange = rangeBytes + "/" +  Long.valueOf(fileLength).toString();
                     response.setHeader("Content-Range", contentRange);
                     break;
                 }

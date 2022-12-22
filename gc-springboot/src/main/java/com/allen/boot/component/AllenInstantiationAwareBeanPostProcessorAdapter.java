@@ -2,7 +2,7 @@ package com.allen.boot.component;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
-import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
+import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 
 import java.beans.PropertyDescriptor;
 
@@ -13,7 +13,7 @@ import java.beans.PropertyDescriptor;
  *
  * 作用：在于目标对象的实例化过程中需要处理的事情，包括实例化对象的前后过程以及实例的属性设置
  */
-public class AllenInstantiationAwareBeanPostProcessorAdapter extends InstantiationAwareBeanPostProcessorAdapter {
+public class AllenInstantiationAwareBeanPostProcessorAdapter implements InstantiationAwareBeanPostProcessor {
 
     public AllenInstantiationAwareBeanPostProcessorAdapter() {
         super();
@@ -50,15 +50,13 @@ public class AllenInstantiationAwareBeanPostProcessorAdapter extends Instantiati
     /**
      * 接口方法、设置某个属性时调用
      * @param pvs
-     * @param pds
      * @param bean
      * @param beanName
      * @return
      * @throws BeansException
      */
     @Override
-    public PropertyValues postProcessPropertyValues(PropertyValues pvs,
-                                                    PropertyDescriptor[] pds, Object bean, String beanName)
+    public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName)
             throws BeansException {
         System.out.println("InstantiationAwareBeanPostProcessor调用postProcessPropertyValues方法");
         return pvs;

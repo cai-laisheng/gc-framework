@@ -1,11 +1,11 @@
 package com.allen.spider.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.annotation.PostConstruct;
 
 /**
  * @author xuguocai  @date 2022/4/17 17:07 定时器默认为单线程，所以如果项目中使用多个定时器要配置线程池

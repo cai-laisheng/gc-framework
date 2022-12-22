@@ -1,6 +1,7 @@
 package com.allen.boot.expand;
 
-import javax.annotation.PostConstruct;
+
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author xuguocai
