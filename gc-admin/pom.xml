@@ -12,7 +12,7 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 	</properties>
 
 	<dependencies>
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper-spring-boot-starter</artifactId>
-			<version>${pagehelper.version}</version>
+			<version>${pagehelper-spring-boot-starter.version}</version>
 		</dependency>
 
 		<dependency>
