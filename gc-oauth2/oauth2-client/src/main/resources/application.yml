@@ -1,0 +1,57 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/smarketing?useUnicode=true&characterEncoding=utf-8&useSSL=true
+    username: root
+    password: 123456
+
+  thymeleaf:
+    cache: false
+  security:
+    oauth2:
+      client:
+        registration:
+          demo-client-oidc:
+            provider: spring
+            client-id: demo-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+            client-name: demo-client-oidc
+          demo-client-authorization-code:
+            provider: spring
+            client-id: demo-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8080/authorized"
+            scope: message.read,message.write
+            client-name: demo-client-authorization-code
+          demo-client-client-credentials:
+            provider: spring
+            client-id: demo-client
+            client-secret: secret
+            authorization-grant-type: client_credentials
+            scope: message.read,message.write
+            client-name: demo-client-client-credentials
+        provider:
+          spring:
+            issuer-uri: http://localhost:9090
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+
+  data:
+    redis:
+      host: 127.0.0.1
+      password: 123456
+      port: 6379
+
+logging:
+  level:
+    root: info

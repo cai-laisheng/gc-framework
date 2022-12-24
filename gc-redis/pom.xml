@@ -15,6 +15,7 @@
         <module>gc-data-redis</module>
         <module>gc-data-jedis</module>
         <module>gc-data-redisson</module>
+        <module>boot-starter-redis</module>
     </modules>
 
 </project>
