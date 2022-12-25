@@ -1,13 +1,13 @@
 package com.allen.netty.server.listener;
 
 import com.allen.netty.server.config.NettyServer;
+import jakarta.servlet.ServletContextEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 
 /**
  * Created by xuguocai on 2021/4/12 16:15  netty 服务端

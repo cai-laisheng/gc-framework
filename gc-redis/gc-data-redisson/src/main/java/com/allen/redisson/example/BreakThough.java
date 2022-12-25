@@ -1,8 +1,8 @@
 package com.allen.redisson.example;
 
-import cn.hutool.core.util.StrUtil;
 import com.allen.redisson.mapper.SysUserMapper;
 import com.allen.redisson.repository.RedisRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -27,13 +27,13 @@ public class BreakThough {
         String cacheKey = "product_list";
         // 从 redis 取值
         String cacheValue = redisRepository.get(cacheKey);
-        if (StrUtil.isNotBlank(cacheValue)) {
+        if (StringUtils.isNotBlank(cacheValue)) {
             // 有就返回
             return cacheValue;
         }
         // 此处获取redis 的值（若是其他人操作，已经赋值（集群操作），这里直接取值）
         cacheValue = redisRepository.get(cacheKey);
-        if (StrUtil.isNotBlank(cacheValue)) {
+        if (StringUtils.isNotBlank(cacheValue)) {
             return cacheValue;
         } else {
             //数据库查询不到，为空

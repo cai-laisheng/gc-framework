@@ -1,8 +1,8 @@
 package com.allen.redisson.example;
 
-import cn.hutool.core.util.StrUtil;
 import com.allen.redisson.mapper.SysUserMapper;
 import com.allen.redisson.repository.RedisRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -28,7 +28,7 @@ public class BreakDown {
         // 获取 缓存值
         String value = redisRepository.get(cacheKey);
         //代表缓存值过期
-        if (StrUtil.isBlank(value)) {
+        if (StringUtils.isBlank(value)) {
             //设置60s的超时，防止del操作失败的时候，下次缓存过期一直不能load db
             if (redisRepository.setNxex(key_mutex,60)) {  //代表设置成功
                 value = sysUserMapper.selectAll().toString();

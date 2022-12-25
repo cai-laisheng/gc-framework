@@ -1,6 +1,6 @@
 package com.allen.redisson.aop;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.allen.redisson.annotation.MethodLimit;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

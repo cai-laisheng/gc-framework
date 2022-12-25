@@ -1,7 +1,7 @@
 package com.allen.sys.aop;
 
-import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONException;
+import com.alibaba.fastjson2.JSONObject;
 import com.allen.sys.annotation.MethodLog;
 import com.allen.sys.model.po.SysOperationLog;
 import com.allen.sys.model.po.SysUser;

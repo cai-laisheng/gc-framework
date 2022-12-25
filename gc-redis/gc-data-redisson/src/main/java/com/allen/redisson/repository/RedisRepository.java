@@ -677,7 +677,7 @@ public class RedisRepository {
             });
 
         }finally {
-            RedisConnectionUtils.releaseConnection(connection, redisConnectionFactory, true);
+            RedisConnectionUtils.releaseConnection(connection, redisConnectionFactory);
         }
         return result;
     }

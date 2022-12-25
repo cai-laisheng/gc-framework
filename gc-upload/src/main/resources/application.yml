@@ -32,9 +32,9 @@ out:
   uploadUrl: /tools/images/
 
 # 针对的是 ViewController   操做，没有配置类参与
-#web:
-#  upload-path: E:/Practices/test
-#  front-path:  E:/Practices
+web:
+  upload-path: E:/Practices/test
+  front-path:  E:/Practices
 #spring:
 #  resources:
 #    static-locations: file:${web.upload-path},file:${web.front-path}

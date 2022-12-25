@@ -1,6 +1,6 @@
 package com.allen.sys.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.allen.sys.annotation.MethodLog;
 import com.allen.sys.common.ResponseBean;
 import com.allen.sys.common.ResponseBeanUtil;

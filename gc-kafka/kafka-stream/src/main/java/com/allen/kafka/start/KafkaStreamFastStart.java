@@ -7,6 +7,7 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.*;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -79,7 +80,7 @@ public class KafkaStreamFastStart {
                 //根据key进行分组  目前的key 就是value,就是一个个的单词
                 .groupByKey()
                 //聚合的时间窗口  多久聚合一次
-                .windowedBy(TimeWindows.of(10000))
+                .windowedBy(TimeWindows.of(Duration.ofSeconds(10000)))
                 //聚合  求单词的个数，调用count后，消息的vlaue是聚合单词后的统计数值  是一个long类型
                 //Materialized.as("count-article-num-001")  是当前消息的状态值，不重复即可
                 .count(Materialized.as("count-article-num-001"))

@@ -1,6 +1,7 @@
 package com.allen.jedis.tool;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.params.SetParams;
 
 import java.util.Collections;
 
@@ -29,8 +30,8 @@ public class JedisTool {
      */
     public static boolean tryGetDistributedLock(Jedis jedis, String lockKey, String requestId, int expireTime) {
 
-        String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);
-
+//        String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);
+        String result = jedis.set(lockKey, requestId,new SetParams().nx().ex(expireTime));
         if (LOCK_SUCCESS.equals(result)) {
             return true;
         }

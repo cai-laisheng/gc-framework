@@ -1,9 +1,9 @@
 package com.allen.redisson.example;
 
-import cn.hutool.core.util.StrUtil;
 import com.allen.redisson.config.RedissonLockHelper;
 import com.allen.redisson.mapper.SysUserMapper;
 import com.allen.redisson.repository.RedisRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,7 +30,7 @@ public class SnowsLide {
         String lockKey = cacheKey;
 
         String cacheValue = redisRepository.get(cacheKey);
-        if (StrUtil.isNotBlank(cacheValue)) {
+        if (StringUtils.isNotBlank(cacheValue)) {
             return cacheValue;
         } else {
             // 加锁
@@ -58,7 +58,7 @@ public class SnowsLide {
         String lockKey = cacheKey;
 
         String cacheValue = redisRepository.get(cacheKey);
-        if (StrUtil.isNotBlank(cacheValue)) {
+        if (StringUtils.isNotBlank(cacheValue)) {
             return cacheValue;
         } else {
             RLock lock = redissonLockHelper.lock(lockKey, 10);
@@ -97,7 +97,7 @@ public class SnowsLide {
         String sign = redisRepository.get(cacheSign);
         //获取缓存值
         String cacheValue = redisRepository.get(cacheKey);
-        if (StrUtil.isNotBlank(sign)) {
+        if (StringUtils.isNotBlank(sign)) {
             return cacheValue; //未过期，直接返回
         } else {
             redisRepository.setExpire(cacheSign,"1",cacheTime);
@@ -116,7 +116,7 @@ public class SnowsLide {
      */
     public String producer(String cacheKey){
         String cacheValue = redisRepository.get(cacheKey);
-        if (StrUtil.isNotBlank(cacheValue)) {
+        if (StringUtils.isNotBlank(cacheValue)) {
             return cacheValue;
         } else {
             // 丢到 队列
@@ -135,11 +135,11 @@ public class SnowsLide {
         int cacheTime = 30;
         // 解析，此处demo不详解
         String cacheKey = xmlStr;
-        if (StrUtil.isBlank(cacheKey)){
+        if (StringUtils.isBlank(cacheKey)){
             return;
         }
         String cacheValue = sysUserMapper.selectAll().toString();
-        if (StrUtil.isBlank(cacheValue)){
+        if (StringUtils.isBlank(cacheValue)){
             return;
         }
         redisRepository.setExpire(cacheKey, cacheValue, cacheTime);

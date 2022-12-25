@@ -4,10 +4,11 @@ import com.allen.es.po.DocBean;
 import com.allen.es.repository.ElasticRepository;
 import com.allen.es.service.IElasticService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.client.erhlc.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
@@ -28,12 +29,18 @@ public class ElasticServiceImpl implements IElasticService {
 
     @Override
     public void createIndex() {
-        elasticsearchTemplate.createIndex(DocBean.class);
+        DocBean docBean = new DocBean(1L, "XX0193hhh", "XX8064hhh", "xxxxxxgghhhh", 1);
+
+        IndexQuery query = new IndexQuery();
+        query.setId("1");
+        query.setObject(docBean);
+        query.setVersion(1L);
+        elasticsearchTemplate.doIndex(query, IndexCoordinates.of(docBean.getClass().getSimpleName().toLowerCase()));
     }
 
     @Override
     public void deleteIndex(String index) {
-        elasticsearchTemplate.deleteIndex(index);
+        elasticsearchTemplate.delete(index);
     }
 
     @Override

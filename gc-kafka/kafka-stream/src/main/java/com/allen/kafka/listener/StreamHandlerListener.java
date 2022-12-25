@@ -4,6 +4,7 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.*;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Arrays;
 
 /**
@@ -72,7 +73,7 @@ public class StreamHandlerListener  implements KafkaStreamListener<KStream<Strin
             }
         }).groupByKey()
                 //时间聚合窗口
-                .windowedBy(TimeWindows.of(5000))
+                .windowedBy(TimeWindows.of(Duration.ofSeconds(5000)))
                 //消息的value就是聚合单词后的统计数值，long类型
                 .count(Materialized.as("count-word-num-0001"))
                 //转换为Kstream
