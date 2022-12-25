@@ -1,8 +1,6 @@
-package com.allen.sys.config;
+package com.allen.upload.config;
 
 import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,7 @@ public class MyBatisConfig {
     @Autowired
     private DataSource dataSource;
 
-    @Value("${mybatis.mapper-locations}")
+    @Value("${mybatis-plus.mapper-locations}")
     private String mapperLocations;
     //配置FactoryBean
     @Bean(name = "sqlSessionFactoryBean")

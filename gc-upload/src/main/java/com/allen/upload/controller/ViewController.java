@@ -1,7 +1,4 @@
 package com.allen.upload.controller;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +25,7 @@ import java.io.File;
  * @Date: 2020-01-04 10:38
  **/
 @RestController
-@RequestMapping("/out")
-@Api(tags = "上传外部接口,适用于没有文件层次记录")
+@RequestMapping("/view")
 @Slf4j
 public class ViewController {
 
@@ -37,7 +33,6 @@ public class ViewController {
     private String uploadUrl;
 
     @PostMapping("upload")
-    @ApiOperation(value = "文件上传")
     public String uploadToProject(MultipartFile file , HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         log.info("上传的首路径:{}",uploadUrl);

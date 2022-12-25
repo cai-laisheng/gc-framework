@@ -1,8 +1,6 @@
 package com.allen.upload.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -24,18 +22,14 @@ import java.util.Objects;
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
-@ApiModel(value="Result对象", description="结果集")
 public class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "状态码")
     private String code = ResponseCode.SUCCESS.getCode();
 
-    @ApiModelProperty(value = "响应信息")
     private String msg = ResponseCode.SUCCESS.getMessage();
 
-    @ApiModelProperty(value = "响应数据")
     private T data;
 
     /**

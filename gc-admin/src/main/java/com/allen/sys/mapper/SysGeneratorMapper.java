@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author: allen小哥 2020-06-05 22:23
  **/
-public interface SysGeneratorMapper extends BaseMapper<SysTable> {
+public interface SysGeneratorMapper extends Mapper<SysTable> {
 
     List<SysTable> findTablePage(@Param("tableName") String tableName);
 

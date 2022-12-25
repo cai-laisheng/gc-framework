@@ -7,7 +7,7 @@ import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
-public interface SysUserMapper extends BaseMapper<SysUser> {
+public interface SysUserMapper extends Mapper<SysUser> {
 
     List<SysUser> findUserPage(@Param("name") String name, @Param("loginName") String loginName);
 

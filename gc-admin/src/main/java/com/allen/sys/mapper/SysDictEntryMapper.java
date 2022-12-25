@@ -6,7 +6,7 @@ import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
-public interface SysDictEntryMapper extends BaseMapper<SysDictEntry> {
+public interface SysDictEntryMapper extends Mapper<SysDictEntry> {
 
     List<SysDictEntry> findList(@Param("typeCode")String typeCode,@Param("dictCode")String dictCode);
 

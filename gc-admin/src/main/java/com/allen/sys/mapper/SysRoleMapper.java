@@ -6,7 +6,7 @@ import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
-public interface SysRoleMapper extends BaseMapper<SysRole> {
+public interface SysRoleMapper extends Mapper<SysRole> {
 
     List<SysRole> findRolePage(@Param("name") String name, @Param("code") String code);
 

@@ -1,8 +1,6 @@
 package com.allen.upload.controller;
 
 import com.allen.upload.base.Result;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
@@ -31,7 +29,6 @@ import java.io.File;
  **/
 @RestController
 @RequestMapping("/absolute")
-@Api(tags = "上传绝对路径接口")
 @Slf4j
 public class AbsolutePathController {
 
@@ -40,7 +37,6 @@ public class AbsolutePathController {
     private Integer port;
 
     @PostMapping("uploadToProject")
-    @ApiOperation(value = "文件上传")
     public Result uploadToProject(MultipartFile file , HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         //获取项目下static的路径

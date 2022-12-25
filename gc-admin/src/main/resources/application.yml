@@ -11,6 +11,13 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  data:
+    redis:
+      password: 123456
+      port: 6379
+      host: 127.0.0.1
+      database: 1
+
 # 注册中心
 #eureka:
 #  instance:
@@ -21,3 +28,4 @@ spring:
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
+  base-packages: com.allen.sys.mapper
