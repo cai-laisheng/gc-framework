@@ -50,6 +50,7 @@
         <module>gc-ddd</module>
         <module>gc-architecture</module>
         <module>gc-oauth2</module>
+        <module>gc-bom</module>
     </modules>
 
     <properties>

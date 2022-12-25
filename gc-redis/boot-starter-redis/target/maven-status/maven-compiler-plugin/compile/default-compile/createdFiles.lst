@@ -1,7 +1,0 @@
-com\allen\component\redis\config\RedissonAutoConfiguration.class
-com\allen\component\redis\RedisAutoConfig.class
-com\allen\component\redis\repository\RedisRepository$1.class
-com\allen\component\redis\DemoRedisApplication.class
-com\allen\component\redis\helper\RedissonLockHelper.class
-com\allen\component\redis\repository\RedisRepository.class
-com\allen\component\redis\config\RedissonProperties.class
