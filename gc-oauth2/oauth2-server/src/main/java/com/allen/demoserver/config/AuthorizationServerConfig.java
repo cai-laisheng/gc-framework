@@ -113,28 +113,30 @@ public class AuthorizationServerConfig {
 
         return registeredClientRepository;
     }
-//    @Bean
-//    public RedisToJdbcService redisToJdbcService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
-//        return new RedisToJdbcServiceImpl(jdbcTemplate, registeredClientRepository);
-//    }
-//    @Bean
-//    public OAuth2AuthorizationService authorizationService(RegisteredClientRepository registeredClientRepository,RedisRepository redisRepository
-//            ,RedisToJdbcService redisToJdbcService) {
-//        return new RedisOAuth2AuthorizationService(registeredClientRepository,redisRepository,redisToJdbcService);
-//    }
     @Bean
-    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
-        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+    public RedisToJdbcService redisToJdbcService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+        return new RedisToJdbcServiceImpl(jdbcTemplate, registeredClientRepository);
     }
 
     @Bean
-    public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
-        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
+    public OAuth2AuthorizationService authorizationService(RegisteredClientRepository registeredClientRepository,RedisRepository redisRepository
+            ,RedisToJdbcService redisToJdbcService) {
+        return new RedisOAuth2AuthorizationService(registeredClientRepository,redisRepository,redisToJdbcService);
     }
 //    @Bean
-//    public OAuth2AuthorizationConsentService authorizationConsentService(RedisRepository redisRepository, RedisToJdbcService redisToJdbcService) {
-//        return new RedisOAuth2AuthorizationConsentService(redisRepository,redisToJdbcService);
+//    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+//        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
 //    }
+
+//    @Bean
+//    public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+//        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
+//    }
+
+    @Bean
+    public OAuth2AuthorizationConsentService authorizationConsentService(RedisRepository redisRepository, RedisToJdbcService redisToJdbcService) {
+        return new RedisOAuth2AuthorizationConsentService(redisRepository,redisToJdbcService);
+    }
 
 
     /**

@@ -49,6 +49,7 @@
         <module>gc-spider</module>
         <module>gc-ddd</module>
         <module>gc-architecture</module>
+        <module>gc-oauth2</module>
     </modules>
 
     <properties>
@@ -72,9 +73,15 @@
         <mapper-spring-boot-starter.version>4.2.2</mapper-spring-boot-starter.version>
         <pagehelper.version>5.3.2</pagehelper.version>
         <sharding-jdbc.version>4.1.1</sharding-jdbc.version>
+        <redisson.version>3.19.0</redisson.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-spring-boot-starter</artifactId>

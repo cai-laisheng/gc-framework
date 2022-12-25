@@ -8,7 +8,6 @@ import org.springframework.core.Ordered;
  * @author Allen
  * @date 2022/10/18 14:00
  **/
-@ComponentScan
 @Configuration
 public class RedisAutoConfig implements Ordered {
 

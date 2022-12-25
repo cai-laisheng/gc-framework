@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
-import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.cache.CacheManager;
@@ -30,7 +29,7 @@ import java.time.Duration;
  */
 @Configuration
 @EnableCaching
-@ConditionalOnClass({ GenericObjectPool.class, JedisConnection.class })
+@ConditionalOnClass({ JedisConnection.class })
 public class RedisCacheConfig extends CachingConfigurerSupport {
 
     @Resource
