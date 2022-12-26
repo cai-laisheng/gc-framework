@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-<!--            <version>${redisson.version}</version>-->
+            <version>${redisson.version}</version>
         </dependency>
     </dependencies>
 
