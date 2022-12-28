@@ -1,5 +1,6 @@
-package com.allen.demoserver.service;
+package com.allen.demoserver.service.impl;
 
+import com.allen.demoserver.entity.SysUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -8,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xuguocai
@@ -40,12 +44,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //		}
 
 		//2.基于用于id查询用户权限
-//		String password = passwordEncoder.encode(data.getPassword());
+		String password = passwordEncoder.encode("123456");
 //		log.info("数据:{}",data);
+
+		SysUserDetails details = new SysUserDetails();
+		details.setUserName("admin");
+		details.setPassword(password);
+		List<String> roles = new ArrayList<>();
+		roles.add("admin");
+		roles.add("user");
+		details.setRoles(roles);
+
 		//3.对查询结果进行封装并返回
-		return new User(username, "password",
-			AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
+//		return new User(username, "password",
+//			AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
 		//返回给认证中心,认证中心会基于用户输入的密码以及数据库的密码做一个比对
+
+		return details;
 	}
 
 }

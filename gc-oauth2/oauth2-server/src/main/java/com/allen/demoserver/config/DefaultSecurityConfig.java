@@ -1,10 +1,6 @@
 package com.allen.demoserver.config;
 
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -42,6 +38,9 @@ import java.util.UUID;
 @Configuration(proxyBeanMethods = false)
 public class DefaultSecurityConfig {
 
+	@Autowired
+	private UserDetailsService userDetailsService;
+
 	/**
 	 * 这个也是个Spring Security的过滤器链，用于Spring Security的身份认证。
 	 * @param http
@@ -58,7 +57,8 @@ public class DefaultSecurityConfig {
 			)
 			// Form login handles the redirect to the login page from the
 			// authorization server filter chain
-			.formLogin(Customizer.withDefaults());
+			.formLogin(Customizer.withDefaults())
+				.userDetailsService(userDetailsService);
 
 		return http.build();
 	}
@@ -68,15 +68,15 @@ public class DefaultSecurityConfig {
 	 * @return
 	 */
 
-	@Bean
-	UserDetailsService users() {
-		UserDetails user = User.withDefaultPasswordEncoder()
-				.username("user1")
-				.password("123456")
-				.roles("USER")
-				.build();
-		return new InMemoryUserDetailsManager(user);
-	}
+//	@Bean
+//	UserDetailsService users() {
+//		UserDetails user = User.withDefaultPasswordEncoder()
+//				.username("user1")
+//				.password("123456")
+//				.roles("USER")
+//				.build();
+//		return new InMemoryUserDetailsManager(user);
+//	}
 
 	public static void main(String[] args) {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();

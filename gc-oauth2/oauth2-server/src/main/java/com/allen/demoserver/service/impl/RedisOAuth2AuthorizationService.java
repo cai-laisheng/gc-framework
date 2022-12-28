@@ -5,14 +5,13 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.allen.component.redis.repository.RedisRepository;
 import com.allen.demoserver.entity.RedisOAuth2Authorization;
-import com.allen.demoserver.entity.SysUser;
+import com.allen.demoserver.entity.SysUserDetails;
 import com.allen.demoserver.service.RedisConsts;
 import com.allen.demoserver.service.RedisToJdbcService;
 import com.allen.demoserver.service.SecurityConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
@@ -248,9 +247,9 @@ public final class RedisOAuth2AuthorizationService implements OAuth2Authorizatio
         if (StringUtils.isNotBlank(accessToken)) {
             String accessTokenKey = ACCESSTOKENKEY + accessToken;
 			// 获取用户信息，此处调用系统管理的用户。若有其他的可以调整 todo
-			SysUser userVO = null;//userClient.selectUserByUserName(authorization.getPrincipalName());
+			SysUserDetails userVO = null;//userClient.selectUserByUserName(authorization.getPrincipalName());
 			if (userVO == null){
-				userVO = new SysUser();
+				userVO = new SysUserDetails();
 				userVO.setUserName(authorization.getPrincipalName());
 			}
 			long expiresAt = authorization.getAccessToken().getToken().getExpiresAt().getEpochSecond();
