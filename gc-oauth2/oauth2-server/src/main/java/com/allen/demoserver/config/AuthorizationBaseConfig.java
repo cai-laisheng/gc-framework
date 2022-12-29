@@ -44,10 +44,10 @@ import java.util.UUID;
 @Configuration
 public class AuthorizationBaseConfig {
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -79,9 +79,9 @@ public class AuthorizationBaseConfig {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("demo-client")
                 // 默认的解码器
-                .clientSecret("{noop}secret")
+//                .clientSecret("{noop}secret")
                 // 引入的解码器
-//                .clientSecret(passwordEncoder().encode("secret"))
+                .clientSecret(passwordEncoder().encode("secret"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)

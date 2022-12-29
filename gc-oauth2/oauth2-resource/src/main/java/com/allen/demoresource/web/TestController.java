@@ -63,7 +63,7 @@ public class TestController {
 	 *不能进入 配置：.hasAnyRole("ROLE_USER")
 	 * @return
 	 */
-	@PreAuthorize("hasRole('USER')")
+//	@PreAuthorize("hasRole('USER')")
 	@GetMapping("/getMessages3")
 	public String[] getMessages3() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -38,8 +38,8 @@ import java.util.UUID;
 @Configuration(proxyBeanMethods = false)
 public class DefaultSecurityConfig {
 
-//	@Autowired
-//	private UserDetailsService userDetailsService;
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	/**
 	 * 这个也是个Spring Security的过滤器链，用于Spring Security的身份认证。
@@ -59,7 +59,7 @@ public class DefaultSecurityConfig {
 			// authorization server filter chain
 			.formLogin(Customizer.withDefaults())
 		// 若是使用第三方，则注入即可
-//				.userDetailsService(userDetailsService)
+				.userDetailsService(userDetailsService)
 		;
 
 		return http.build();
@@ -69,15 +69,15 @@ public class DefaultSecurityConfig {
 	 * 配置用户信息，或者配置用户数据来源，主要用于用户的检索
 	 * 使用内存测试，则需要删除编码器的注入、其他UserDetailsServiceImpl 实现.此处使用UserDetailsServiceImpl实现
 	 */
-	@Bean
-	UserDetailsService users() {
-		UserDetails user = User.withDefaultPasswordEncoder()
-				.username("admin")
-				.password("123456")
-				.roles("USER")
-				.build();
-		return new InMemoryUserDetailsManager(user);
-	}
+//	@Bean
+//	UserDetailsService users() {
+//		UserDetails user = User.withDefaultPasswordEncoder()
+//				.username("admin")
+//				.password("123456")
+//				.roles("USER")
+//				.build();
+//		return new InMemoryUserDetailsManager(user);
+//	}
 
 	public static void main(String[] args) {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();

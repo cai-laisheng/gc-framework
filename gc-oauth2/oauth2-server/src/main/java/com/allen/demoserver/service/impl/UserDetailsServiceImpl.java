@@ -3,7 +3,9 @@ package com.allen.demoserver.service.impl;
 import com.allen.demoserver.entity.SysUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,14 +14,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author xuguocai
  * @date 2022/11/24 17:06
  **/
 @Slf4j
-//@Service
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 
@@ -45,18 +49,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		SysUserDetails details = new SysUserDetails();
 		details.setUserName("admin");
+		details.setNickName("xuguocai");
 		details.setPassword(password);
 		List<String> roles = new ArrayList<>();
 		roles.add("admin");
 		roles.add("user");
 		details.setRoles(roles);
 
+		Set<GrantedAuthority> authorities = new HashSet<>(roles.size());
+		for (String role : roles) {
+			authorities.add(new SimpleGrantedAuthority(role));
+		}
+
+		details.setAuthorities(authorities);
+
 		//3.对查询结果进行封装并返回
-		return new User("admin", password,
-			AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
+//		return new User("admin", password,
+//			AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
 		//返回给认证中心,认证中心会基于用户输入的密码以及数据库的密码做一个比对
 
-//		return details;
+		// 自定义用户
+		return details;
 	}
 
 }
