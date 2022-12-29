@@ -6,18 +6,18 @@ package com.allen.demoserver.service;
  * </p>
  */
 public interface SecurityConstant {
-    String USER_DETAIL = "oauth-server:auth:user:{token}";
-    String AUTH_PERM = "oauth-server:auth:perm:{serviceName}:{httpMethod}";
-    String PERM_ROLE = "oauth-server:auth:perm-role:{permCode}";
-    String USER_ROLE_MENU = "oauth-server:auth:menu:{token}:{roleCode}";
-    String TOKEN_STORE = "oauth-server:auth:token-store";
-    String PASSWORD_ERROR_COUNT = "oauth-server:auth:password-error-count:{username}";
+    String USER_DETAIL = "oauth-server:user:{token}";
+    String AUTH_PERM = "oauth-server:perm:{serviceName}:{httpMethod}";
+    String PERM_ROLE = "oauth-server:perm-role:{permCode}";
+    String USER_ROLE_MENU = "oauth-server:menu:{token}:{roleCode}";
+    String TOKEN_STORE = "oauth-server:token-store";
+    String PASSWORD_ERROR_COUNT = "oauth-server:password-error-count:{username}";
     String SSO_LOGIN = "/oauth/login";
     String SSO_LOGIN_FORM_PAGE = "/login";
     String JSESSIONID = "JSESSIONID";
     String SSO_LOGOUT = "/oauth/logout";
-    String AUTHORIZATION = "oauth-server:auth:oauth2:authorization";
-    String AUTHORIZATION_CONSENT = "oauth-server:auth:oauth2:authorization-consent";
+    String AUTHORIZATION = "oauth-server:oauth2:authorization";
+    String AUTHORIZATION_CONSENT = "oauth-server:oauth2:authorization-consent";
     String ISSUER = "https://authorization.life";
     String IMPLICIT_REDIRECT_URI_FORMAT = "{redirectUri}" +
             "#access_token={accessToken}" +

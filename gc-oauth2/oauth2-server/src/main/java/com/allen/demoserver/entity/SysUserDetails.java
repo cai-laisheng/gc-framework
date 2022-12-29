@@ -13,7 +13,7 @@ import java.util.List;
 
 @Data
 @FieldNameConstants
-public class SysUserDetails implements Serializable, UserDetails {
+public class SysUserDetails implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
@@ -49,33 +49,33 @@ public class SysUserDetails implements Serializable, UserDetails {
 	 * 当前拥有角色集合
 	 */
 	private List<String> roles;
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<UserGrantedAuthority> authorities = new ArrayList<>(roles.size());
-		for (String role : roles) {
-			authorities.add(new UserGrantedAuthority(role));
-		}
-		return authorities;
-	}
-
-	@Override
-	public String getUsername() {
-		return userName;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
+//
+//	@Override
+//	public Collection<? extends GrantedAuthority> getAuthorities() {
+//		List<UserGrantedAuthority> authorities = new ArrayList<>(roles.size());
+//		for (String role : roles) {
+//			authorities.add(new UserGrantedAuthority(role));
+//		}
+//		return authorities;
+//	}
+//
+//	@Override
+//	public String getUsername() {
+//		return userName;
+//	}
+//
+//	@Override
+//	public boolean isAccountNonExpired() {
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean isAccountNonLocked() {
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean isCredentialsNonExpired() {
+//		return true;
+//	}
 }

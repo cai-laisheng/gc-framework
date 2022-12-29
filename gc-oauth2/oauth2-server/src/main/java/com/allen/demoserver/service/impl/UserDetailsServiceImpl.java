@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //			throw new UsernameNotFoundException("用户不存在");
 //		}
 
-		//2.基于用于id查询用户权限
+		//2.基于用于id查询用户权限  账号 admin 123456
 		String password = passwordEncoder.encode("123456");
 //		log.info("数据:{}",data);
 
@@ -56,11 +57,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		details.setRoles(roles);
 
 		//3.对查询结果进行封装并返回
-//		return new User(username, "password",
-//			AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
+		return new User("admin", password,
+			AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
 		//返回给认证中心,认证中心会基于用户输入的密码以及数据库的密码做一个比对
 
-		return details;
+//		return details;
 	}
 
 }

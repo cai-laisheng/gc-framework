@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.allen.component.redis.repository.RedisRepository;
 import com.allen.demoserver.entity.RedisOAuth2Authorization;
+//import com.allen.demoserver.entity.SysUserDetails;
 import com.allen.demoserver.entity.SysUserDetails;
 import com.allen.demoserver.service.RedisConsts;
 import com.allen.demoserver.service.RedisToJdbcService;
