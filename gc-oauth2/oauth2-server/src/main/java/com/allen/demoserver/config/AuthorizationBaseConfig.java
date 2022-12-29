@@ -1,10 +1,5 @@
 package com.allen.demoserver.config;
 
-import com.allen.component.redis.repository.RedisRepository;
-import com.allen.demoserver.service.RedisToJdbcService;
-import com.allen.demoserver.service.impl.RedisOAuth2AuthorizationConsentService;
-import com.allen.demoserver.service.impl.RedisOAuth2AuthorizationService;
-import com.allen.demoserver.service.impl.RedisToJdbcServiceImpl;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -23,12 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -47,8 +38,11 @@ import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
 import java.util.UUID;
 
+/**
+ * 授权基础配置
+ */
 @Configuration
-public class AuthorizationServerConfig {
+public class AuthorizationBaseConfig {
 
 //    @Bean
 //    public PasswordEncoder passwordEncoder(){
@@ -84,7 +78,9 @@ public class AuthorizationServerConfig {
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("demo-client")
+                // 默认的解码器
                 .clientSecret("{noop}secret")
+                // 引入的解码器
 //                .clientSecret(passwordEncoder().encode("secret"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
@@ -113,37 +109,16 @@ public class AuthorizationServerConfig {
                         .build())
                 .build();
 
-        // Save registered client in db as if in-memory
-        JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
-        if (null == registeredClientRepository.findByClientId("demo-client")){
-            registeredClientRepository.save(registeredClient);
-        }
+        // Save registered client in db 数据库保存
+//        JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
+//        if (null == registeredClientRepository.findByClientId("demo-client")){
+//            registeredClientRepository.save(registeredClient);
+//        }
+//
+//        return registeredClientRepository;
 
-        return registeredClientRepository;
-    }
-    @Bean
-    public RedisToJdbcService redisToJdbcService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
-        return new RedisToJdbcServiceImpl(jdbcTemplate, registeredClientRepository);
-    }
-
-    @Bean
-    public OAuth2AuthorizationService authorizationService(RegisteredClientRepository registeredClientRepository,RedisRepository redisRepository
-            ,RedisToJdbcService redisToJdbcService) {
-        return new RedisOAuth2AuthorizationService(registeredClientRepository,redisRepository,redisToJdbcService);
-    }
-//    @Bean
-//    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
-//        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
-//    }
-
-//    @Bean
-//    public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
-//        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
-//    }
-
-    @Bean
-    public OAuth2AuthorizationConsentService authorizationConsentService(RedisRepository redisRepository, RedisToJdbcService redisToJdbcService) {
-        return new RedisOAuth2AuthorizationConsentService(redisRepository,redisToJdbcService);
+        // 基于内存保存
+        return new InMemoryRegisteredClientRepository(registeredClient);
     }
 
 
@@ -191,6 +166,5 @@ public class AuthorizationServerConfig {
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
     }
-
 
 }

@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.allen"})
+//@ComponentScan(basePackages = {"com.allen"})
 public class DemoServerApplication {
 
     public static void main(String[] args) {

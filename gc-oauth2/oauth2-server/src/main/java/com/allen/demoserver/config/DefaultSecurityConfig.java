@@ -58,6 +58,7 @@ public class DefaultSecurityConfig {
 			// Form login handles the redirect to the login page from the
 			// authorization server filter chain
 			.formLogin(Customizer.withDefaults())
+		// 若是使用第三方，则注入即可
 //				.userDetailsService(userDetailsService)
 		;
 

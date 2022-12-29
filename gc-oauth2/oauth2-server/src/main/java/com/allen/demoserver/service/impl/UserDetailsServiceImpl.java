@@ -22,8 +22,7 @@ import java.util.List;
 //@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-//	@Autowired
-//	private UserClient userClient;
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -37,12 +36,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username)
 		throws UsernameNotFoundException {
 		log.info("loadUserByUsername   {}",username);
-		//基于feign方式获取远程数据并封装
-		//1.基于用户名获取用户信息
-//		UserVO data = userClient.selectUserByUserName(username);
-//		if(data==null) {
-//			throw new UsernameNotFoundException("用户不存在");
-//		}
+		//1.基于用户名获取用户信息(远程接口) todo
+
 
 		//2.基于用于id查询用户权限  账号 admin 123456
 		String password = passwordEncoder.encode("123456");
