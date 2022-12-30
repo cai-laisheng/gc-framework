@@ -1,6 +1,7 @@
 package com.allen.demoserver.service.impl;
 
 import com.allen.demoserver.entity.SysUserDetails;
+import com.allen.demoserver.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,10 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author xuguocai
@@ -47,8 +45,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		String password = passwordEncoder.encode("123456");
 //		log.info("数据:{}",data);
 
-		SysUserDetails details = new SysUserDetails();
-		details.setUserName("admin");
+		SysUser details = new SysUser();
+		details.setUsername("admin");
 		details.setNickName("xuguocai");
 		details.setPassword(password);
 		List<String> roles = new ArrayList<>();
@@ -56,20 +54,64 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		roles.add("user");
 		details.setRoles(roles);
 
-		Set<GrantedAuthority> authorities = new HashSet<>(roles.size());
-		for (String role : roles) {
-			authorities.add(new SimpleGrantedAuthority(role));
-		}
-
-		details.setAuthorities(authorities);
+//		Set<GrantedAuthority> authorities = new HashSet<>(roles.size());
+//		for (String role : roles) {
+//			authorities.add(new SimpleGrantedAuthority(role));
+//		}
+//
+//		details.setAuthorities(authorities);
 
 		//3.对查询结果进行封装并返回
 //		return new User("admin", password,
 //			AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
 		//返回给认证中心,认证中心会基于用户输入的密码以及数据库的密码做一个比对
-
+		log.info("用户信息：",details);
 		// 自定义用户
-		return details;
+		return new CustomUserDetails(details);
 	}
+
+	static final class CustomUserDetails extends SysUser implements UserDetails {
+
+		private static final List<GrantedAuthority> ROLE_USER = Collections
+				.unmodifiableList(AuthorityUtils.createAuthorityList("ROLE_USER"));
+
+		CustomUserDetails(SysUser sysUser) {
+			super(sysUser.getId(), sysUser.getUsername(), sysUser.getNickName(),sysUser.getEmail(),
+					sysUser.getPhone(),sysUser.getDepartmentId(),sysUser.getDepartmentName(),
+					sysUser.getPassword(),sysUser.getUserGender(),sysUser.getRoles());
+		}
+
+		@Override
+		public Collection<? extends GrantedAuthority> getAuthorities() {
+			return ROLE_USER;
+		}
+
+		@Override
+		public String getUsername() {
+			return getName();
+		}
+
+		@Override
+		public boolean isAccountNonExpired() {
+			return true;
+		}
+
+		@Override
+		public boolean isAccountNonLocked() {
+			return true;
+		}
+
+		@Override
+		public boolean isCredentialsNonExpired() {
+			return true;
+		}
+
+		@Override
+		public boolean isEnabled() {
+			return true;
+		}
+
+	}
+
 
 }
