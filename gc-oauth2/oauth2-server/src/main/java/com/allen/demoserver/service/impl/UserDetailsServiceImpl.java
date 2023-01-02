@@ -3,6 +3,8 @@ package com.allen.demoserver.service.impl;
 import com.allen.demoserver.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -50,10 +52,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //		details.setRoles(roles);
 		SysUser details = new SysUser("111","admin","xuguocai","qq@qq.com",password,roles);
 
-//		Set<GrantedAuthority> authorities = new HashSet<>(roles.size());
-//		for (String role : roles) {
-//			authorities.add(new SimpleGrantedAuthority(role));
-//		}
+		Set<GrantedAuthority> authorities = new HashSet<>(roles.size());
+		for (String role : roles) {
+			authorities.add(new SimpleGrantedAuthority(role));
+		}
 //
 //		details.setAuthorities(authorities);
 
@@ -63,7 +65,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		//返回给认证中心,认证中心会基于用户输入的密码以及数据库的密码做一个比对
 		log.info("用户信息：{}",details);
 		// 自定义用户,已经放在授权服务器上下文中
-		return new CustomUserDetails(details);
+		return new CustomUserDetails(details,authorities);
 	}
 
 }

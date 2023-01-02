@@ -46,7 +46,8 @@ public class CustomUserDetailsDeserializer extends JsonDeserializer<CustomUserDe
 		ObjectMapper mapper = (ObjectMapper) jp.getCodec();
 		JsonNode jsonNode = mapper.readTree(jp);
 
-//		Set<? extends GrantedAuthority> authorities = (Set)mapper.convertValue(jsonNode.get("authorities"), SIMPLE_GRANTED_AUTHORITY_SET);
+		List<? extends GrantedAuthority> authorities = mapper.convertValue(jsonNode.get("authorities"),
+				SIMPLE_GRANTED_AUTHORITY_SET);
 		List<String> roles = mapper.convertValue(jsonNode.get("roles"), List.class);
 
 		JsonNode passwordNode = readJsonNode(jsonNode, "password");
@@ -66,7 +67,7 @@ public class CustomUserDetailsDeserializer extends JsonDeserializer<CustomUserDe
 //		User result = new User(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
 //			authorities);
 
-		return new CustomUserDetails(details);
+		return new CustomUserDetails(details,authorities);
 	}
 
 	private JsonNode readJsonNode(JsonNode jsonNode, String field) {

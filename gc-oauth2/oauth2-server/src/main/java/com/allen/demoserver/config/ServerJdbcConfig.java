@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * 基于JDBC实现 （ServerRedisConfig、ServerJdbcConfig、ServerRedisConfig 使用其一即可）
  */
-@Configuration
+//@Configuration
 public class ServerJdbcConfig {
 
 
