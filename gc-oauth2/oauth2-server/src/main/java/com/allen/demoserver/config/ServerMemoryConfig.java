@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 /**
  * 基于内存保存实现 （ServerRedisConfig、ServerJdbcConfig、ServerRedisConfig 使用其一即可）
  */
-@Configuration
+//@Configuration
 public class ServerMemoryConfig {
 
 

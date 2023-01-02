@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
@@ -37,13 +38,17 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
 import java.util.UUID;
-
 /**
  * 授权基础配置
  */
 @Configuration
 public class AuthorizationBaseConfig {
 
+
+    /**
+     *编码器
+     * @return
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -110,15 +115,15 @@ public class AuthorizationBaseConfig {
                 .build();
 
         // Save registered client in db 数据库保存
-//        JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
-//        if (null == registeredClientRepository.findByClientId("demo-client")){
-//            registeredClientRepository.save(registeredClient);
-//        }
-//
-//        return registeredClientRepository;
+        JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
+        if (null == registeredClientRepository.findByClientId("demo-client")){
+            registeredClientRepository.save(registeredClient);
+        }
+
+        return registeredClientRepository;
 
         // 基于内存保存
-        return new InMemoryRegisteredClientRepository(registeredClient);
+//        return new InMemoryRegisteredClientRepository(registeredClient);
     }
 
 

@@ -2,6 +2,7 @@ package com.allen.demoserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
@@ -16,6 +17,7 @@ import java.util.*;
  */
 @Data
 @FieldNameConstants
+@ToString
 public class SysUser implements Serializable{
 	private static final long serialVersionUID = 1L;
 
@@ -44,6 +46,19 @@ public class SysUser implements Serializable{
 	 */
 	private List<String> roles;
 
+	public SysUser(){}
+
+	@JsonCreator
+	public SysUser(String id, String username, String nickName, String email,
+				   String password, List<String> roles) {
+		this.id = id;
+		this.username = username;
+		this.nickName = nickName;
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+	}
+
 	@JsonCreator
 	public SysUser(String id, String username, String nickName, String email, String phone,
 				   String departmentId, String departmentName, String password, Integer userGender,
@@ -60,9 +75,6 @@ public class SysUser implements Serializable{
 		this.roles = roles;
 	}
 
-	public SysUser() {
-
-	}
 
 	public String getName(){
 		return this.username;

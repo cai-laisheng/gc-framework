@@ -4,9 +4,10 @@ package com.allen.demoserver.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.allen.component.redis.repository.RedisRepository;
+import com.allen.demoserver.entity.CustomUserDetails;
 import com.allen.demoserver.entity.RedisOAuth2Authorization;
 //import com.allen.demoserver.entity.SysUserDetails;
-import com.allen.demoserver.entity.SysUserDetails;
+import com.allen.demoserver.entity.SysUser;
 import com.allen.demoserver.service.RedisConsts;
 import com.allen.demoserver.service.RedisToJdbcService;
 import com.allen.demoserver.service.SecurityConstant;
@@ -248,10 +249,10 @@ public final class RedisOAuth2AuthorizationService implements OAuth2Authorizatio
         if (StringUtils.isNotBlank(accessToken)) {
             String accessTokenKey = ACCESSTOKENKEY + accessToken;
 			// 获取用户信息，此处调用系统管理的用户。若有其他的可以调整 todo
-			SysUserDetails userVO = null;//userClient.selectUserByUserName(authorization.getPrincipalName());
+			SysUser userVO = null;//userClient.selectUserByUserName(authorization.getPrincipalName());
 			if (userVO == null){
-				userVO = new SysUserDetails();
-				userVO.setUserName(authorization.getPrincipalName());
+				userVO = new SysUser();
+				userVO.setUsername(authorization.getPrincipalName());
 			}
 			long expiresAt = authorization.getAccessToken().getToken().getExpiresAt().getEpochSecond();
 			long issuedAt = authorization.getAccessToken().getToken().getIssuedAt().getEpochSecond();
