@@ -1,5 +1,11 @@
 package com.allen.demoserver.config;
 
+import com.allen.demoserver.enums.SmarketingGrant;
+import com.allen.demoserver.extension.captcha.OAuth2CaptchaAuthenticationConverter;
+import com.allen.demoserver.extension.captcha.OAuth2CaptchaAuthenticationProvider;
+import com.allen.demoserver.extension.password.OAuth2PasswordAuthenticationConverter;
+import com.allen.demoserver.extension.password.OAuth2PasswordAuthenticationProvider;
+import com.allen.demoserver.handle.OAuth2AuthenticationFailureHandler;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -11,15 +17,15 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
@@ -29,8 +35,9 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -58,20 +65,30 @@ public class AuthorizationBaseConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
             throws Exception {
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
-        http
-                // Redirect to the login page when not authenticated from the
-                // authorization endpoint
-                .exceptionHandling((exceptions) -> exceptions
-                        .authenticationEntryPoint(
-                                new LoginUrlAuthenticationEntryPoint("/login"))
-                )
-                // Accept access tokens for User Info and/or Client Registration
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
+                new OAuth2AuthorizationServerConfigurer();
 
-        return http.build();
+        http.apply(authorizationServerConfigurer);
+
+        authorizationServerConfigurer.tokenEndpoint(tokenEndpoint -> tokenEndpoint
+                        .accessTokenRequestConverters(authenticationConverters -> {
+                            authenticationConverters.add(new OAuth2PasswordAuthenticationConverter());
+                            authenticationConverters.add(new OAuth2CaptchaAuthenticationConverter());
+                                }))
+                .clientAuthentication(clientAuthentication -> clientAuthentication
+                        .errorResponseHandler(authenticationFailureHandler()));
+
+        DefaultSecurityFilterChain chain = http
+                .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
+                .authorizeHttpRequests(authorize ->
+                        authorize.anyRequest().authenticated()
+                )
+                .csrf(CsrfConfigurer::disable)
+                .build();
+
+        addingAdditionalAuthenticationProvider(http);
+
+        return chain;
     }
 
     /**
@@ -91,6 +108,8 @@ public class AuthorizationBaseConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
+                .authorizationGrantType(new AuthorizationGrantType(SmarketingGrant.CAPTCHA))
                 .redirectUri("http://127.0.0.1:8080/login/oauth2/code/demo-client-oidc")
                 .redirectUri("http://127.0.0.1:8080/authorized")
                 .scope(OidcScopes.OPENID)
@@ -171,5 +190,24 @@ public class AuthorizationBaseConfig {
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
     }
+
+    @Bean
+    public OAuth2AuthenticationFailureHandler authenticationFailureHandler() {
+        return new OAuth2AuthenticationFailureHandler();
+    }
+
+    private static void addingAdditionalAuthenticationProvider(HttpSecurity http) {
+        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+        OAuth2AuthorizationService authorizationService = http.getSharedObject(OAuth2AuthorizationService.class);
+        OAuth2TokenGenerator<?> tokenGenerator = http.getSharedObject(OAuth2TokenGenerator.class);
+
+        OAuth2PasswordAuthenticationProvider passwordAuthenticationProvider =
+                new OAuth2PasswordAuthenticationProvider(authenticationManager, authorizationService, tokenGenerator);
+        http.authenticationProvider(passwordAuthenticationProvider);
+        OAuth2CaptchaAuthenticationProvider captchaAuthenticationProvider =
+                new OAuth2CaptchaAuthenticationProvider(authenticationManager, authorizationService, tokenGenerator);
+        http.authenticationProvider(captchaAuthenticationProvider);
+    }
+
 
 }
