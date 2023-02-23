@@ -214,19 +214,16 @@ public final class DownloadUtil {
             // 不是从最开始下载, 响应的格式是: Content-Range: bytes [文件块的开始字节]-[文件的总大小 - 1]/[文件的总大小]
             logger.debug("---------------不是从开始进行下载！服务器即将开始断点续传...");
             switch (rangeSwitch) {
-                case 1: { // 针对 bytes=27000- 的请求
-                    String contentRange = new StringBuffer("bytes ").append( Long.valueOf(pastLength).toString()).append("-")
-                            .append( Long.valueOf(fileLength - 1).toString()).append("/").append(new Long(fileLength).toString()).toString();
+                case 1 -> { // 针对 bytes=27000- 的请求
+                    String contentRange = "bytes " + Long.valueOf(pastLength).toString() + "-" +
+                            Long.valueOf(fileLength - 1).toString() + "/" + Long.valueOf(fileLength).toString();
                     response.setHeader("Content-Range", contentRange);
-                    break;
                 }
-                case 2: { // 针对 bytes=27000-39000 的请求
-                    String contentRange = rangeBytes + "/" +  Long.valueOf(fileLength).toString();
+                case 2 -> { // 针对 bytes=27000-39000 的请求
+                    String contentRange = rangeBytes + "/" + Long.valueOf(fileLength).toString();
                     response.setHeader("Content-Range", contentRange);
-                    break;
                 }
-                default: {
-                    break;
+                default -> {
                 }
             }
         } else {

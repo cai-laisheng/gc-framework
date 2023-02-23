@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.util.Assert;
 
+import java.security.Principal;
 import java.util.Collections;
 
 /**
@@ -79,6 +80,9 @@ public class OAuth2CaptchaAuthenticationProvider implements AuthenticationProvid
 
         OAuth2Authorization.Builder authorizationBuilder = getAuthorizationBuilder(passwordAuthentication,
                 registeredClient);
+
+        // 可拓展 attribute
+        authorizationBuilder.attribute(Principal.class.getName(), authentication);
 
         OAuth2TokenContext tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.ACCESS_TOKEN).build();
 
