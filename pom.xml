@@ -51,6 +51,7 @@
         <module>gc-architecture</module>
         <module>gc-oauth2</module>
         <module>gc-bom</module>
+        <module>gc-activiti</module>
     </modules>
 
     <properties>
