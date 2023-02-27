@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>activiti-flowable</module>
+        <module>gc-camunda</module>
     </modules>
 
     <distributionManagement>

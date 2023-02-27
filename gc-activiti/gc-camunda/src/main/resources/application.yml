@@ -1,0 +1,21 @@
+server:
+  port: 8092
+
+camunda.bpm.admin-user:
+  id: demo
+  password: demo
+
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/camunda_dev?serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+    username: root
+    password: 123456
+
+  camunda:
+    bpm:
+      database:
+        type: mysql
+        schema-update: true
+      auto-deployment-enabled: false
+
