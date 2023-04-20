@@ -12,6 +12,7 @@
     <modules>
         <module>activiti-flowable</module>
         <module>gc-camunda</module>
+        <module>activity-flowable-ui</module>
     </modules>
 
     <distributionManagement>
